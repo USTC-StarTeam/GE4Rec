@@ -1,19 +1,4 @@
-# =========================================================================
-# Copyright (C) 2024. The FuxiCTR Library. All rights reserved.
-# Copyright (C) 2022. Huawei Technologies Co., Ltd. All rights reserved.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# =========================================================================
+
 
 import torch
 from torch import nn
@@ -75,16 +60,12 @@ class DCNv2(BaseModel):
             final_dim = stacked_dnn_hidden_units[-1] + parallel_dnn_hidden_units[-1]
         if self.model_structure == "crossnet_only": # only CrossNet
             final_dim = input_dim
-            
-        # self.fc = nn.Linear(final_dim, 1)
+
         self.fc = nn.Sequential(
             nn.Linear(final_dim, final_dim * 2),
             nn.ReLU(),
             nn.Linear(final_dim * 2, 1),
         )
-        if kwargs.get('use_high_cardinality_predict', False) or kwargs.get('use_low_cardinality_predict', False) or kwargs.get('use_random_predict', False):
-            num_target = kwargs.get('num_target', 1)
-            self.fc = nn.Linear(embedding_dim * num_target + parallel_dnn_hidden_units[-1], 1)
         self.compile(kwargs["optimizer"], kwargs["loss"], learning_rate)
         self.reset_parameters()
         self.model_to_device()
@@ -93,21 +74,15 @@ class DCNv2(BaseModel):
         self.record_feature_emb = []
         self.record_final_out = []
         self.record_feature_emb = []
-        self.record_gating = []
-        self.record_gating_linear = []
+        self.record_gen = []
+        self.record_gen_linear = []
         self.record_final_representation = []
-
-    def compute_loss(self, return_dict, y_true):
-        loss = super().compute_loss(return_dict, y_true)
-        return loss
 
     def forward(self, inputs):
         self.grad_var_list = []
         X = self.get_inputs(inputs)
 
         feature_emb = self.embedding_layer(X, flatten_emb=True)
-        if self.analyzing:
-            self.record_feature_emb.append(feature_emb.detach().clone().cpu())
 
         cross_out = self.crossnet(feature_emb)
         if self.model_structure == "crossnet_only":
@@ -146,13 +121,6 @@ class CrossNetV2(nn.Module):
 
         self.gen_layers = nn.ModuleList(GEN(feature_map, embedding_dim, **kwargs) for _ in range(self.num_layers))
         self.bn = nn.BatchNorm1d(self.num_field * self.embedding_dim, affine=False)
-        self.cardinality = self.get_cardinality(feature_map)
-
-    def get_cardinality(self, feature_map):
-        tmp = list(feature_map.features.values())
-        cardinality = torch.tensor([_.get('vocab_size', 0) for _ in tmp])
-        idx = torch.sort(cardinality, descending=True).indices
-        return idx
 
     def init_record(self):
         self.record_cross_emb = []
@@ -163,9 +131,7 @@ class CrossNetV2(nn.Module):
         self.record_left = []
         self.record_right = []
 
-    def forward(self, feature_embedding, gating=None):
-        self.cov_loss = 0
-        self.infonce_loss = 0
+    def forward(self, feature_embedding, mask=None):
         X_0 = feature_embedding
         X_i = feature_embedding # b x dim
 
@@ -174,12 +140,10 @@ class CrossNetV2(nn.Module):
                 X_0 = self.gen_layers[i](X_i)[0]
             else:
                 X_0 = self.gen_layers[i](feature_embedding)[0]
-            non_linear_rep = X_i
-            tmp = self.cross_layers[i](non_linear_rep)
+            tmp = self.cross_layers[i](X_i)
 
             if self.analyzing:
                 self.record_X_0.append(X_0.detach().clone().cpu())
-                self.record_non_linear_rep.append(non_linear_rep.detach().clone().cpu())
                 self.record_left.append(X_0.detach().clone().cpu())
                 self.record_right.append(tmp.detach().clone().cpu())
             tmp = X_0 * tmp
@@ -192,61 +156,4 @@ class CrossNetV2(nn.Module):
             if self.analyzing:
                 self.record_cross_emb.append(tmp.detach().clone().cpu())
                 self.record_cross_emb_residual.append(X_i.detach().clone().cpu())
-        return X_i
-
-
-    def forward(self, feature_embedding, gating=None):
-        self.cov_loss = 0
-        self.infonce_loss = 0
-        X_0 = feature_embedding
-        X_i = feature_embedding # b x dim
-        rst = 0
-
-        for i in range(self.num_layers):
-            if self.kwargs.get('use_gen_rst', False):
-                X_0 = self.gen_layers[i](X_i)[0]
-            else:
-                X_0 = self.gen_layers[i](feature_embedding)[0]
-            non_linear_rep = X_i
-            tmp = self.cross_layers[i](non_linear_rep)
-
-            if self.analyzing:
-                self.record_X_0.append(X_0.detach().clone().cpu())
-                self.record_non_linear_rep.append(non_linear_rep.detach().clone().cpu())
-                self.record_left.append(X_0.detach().clone().cpu())
-                self.record_right.append(tmp.detach().clone().cpu())
-            tmp = X_0 * tmp
-            if self.kwargs.get('use_random_predict', False):
-                num_target = self.kwargs.get('num_target', 5)
-                if self.training:
-                    selected_idx = torch.randperm(self.num_field)[torch.arange(num_target)]
-                else:
-                    selected_idx = self.cardinality[:num_target]
-                rst += tmp.reshape(-1, self.num_field, self.embedding_dim)[:, selected_idx].flatten(1)
-            if self.kwargs.get('use_high_cardinality_predict', False):
-                num_target = self.kwargs.get('num_target', 5)
-                selected_idx = self.cardinality[:num_target]
-                rst += tmp.reshape(-1, self.num_field, self.embedding_dim)[:, selected_idx].flatten(1)
-            if self.kwargs.get('use_low_cardinality_predict', False):
-                num_target = self.kwargs.get('num_target', 5)
-                selected_idx = self.cardinality[-num_target:]
-                rst += tmp.reshape(-1, self.num_field, self.embedding_dim)[:, selected_idx].flatten(1)
-            if self.kwargs.get('use_hard_mask_predict', False):
-                num_target = self.kwargs.get('num_target', 1)
-                if self.training:
-                    selected_idx = torch.randperm(self.num_field)[torch.arange(num_target)]
-                else:
-                    selected_idx = self.cardinality[:num_target]
-                rst += tmp.reshape(-1, self.num_field, self.embedding_dim)[:, selected_idx].flatten(1)
-            X_i = X_i + tmp
-            X_i = torch.nn.functional.dropout(
-                X_i,
-                p=self.kwargs.get('cross_drop', 0),
-                training=self.training,
-            )
-            if self.analyzing:
-                self.record_cross_emb.append(tmp.detach().clone().cpu())
-                self.record_cross_emb_residual.append(X_i.detach().clone().cpu())
-        if self.kwargs.get('use_high_cardinality_predict', False) or self.kwargs.get('use_low_cardinality_predict', False) or self.kwargs.get('use_random_predict', False)  or self.kwargs.get('use_low_cardinality_predict', False) or self.kwargs.get('use_hard_mask_predict', False):
-            return rst
         return X_i

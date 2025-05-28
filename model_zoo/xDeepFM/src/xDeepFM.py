@@ -1,19 +1,4 @@
-# =========================================================================
-# Copyright (C) 2024. The FuxiCTR Library. All rights reserved.
-# Copyright (C) 2022. Huawei Technologies Co., Ltd. All rights reserved.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# =========================================================================
+
 
 
 import torch
@@ -44,10 +29,6 @@ class xDeepFM(BaseModel):
                                       net_regularizer=net_regularizer,
                                       **kwargs)     
         self.embedding_layer = FeatureEmbedding(feature_map, embedding_dim)
-        # self.feature_gating = FeatureSelection(feature_map, feature_map.sum_emb_out_dim(), embedding_dim, fs_hidden_units=[1000])
-        self.feature_gating = nn.Sequential(
-            nn.Linear(feature_map.sum_emb_out_dim(), feature_map.sum_emb_out_dim()),
-        )
         activation_dict = {
             'relu': nn.ReLU(),
             'tanh': nn.Tanh(),
@@ -78,8 +59,8 @@ class xDeepFM(BaseModel):
 
     def init_record(self):
         self.record_feature_emb = []
-        self.record_gating = []
-        self.record_gating_linear = []
+        self.record_gen = []
+        self.record_gen_linear = []
         # self.record_final_representation = []
 
     def forward(self, inputs):
@@ -91,21 +72,9 @@ class xDeepFM(BaseModel):
         if self.training and self.analyzing:
             feature_emb.retain_grad()
         self.feature_embedding_grad = feature_emb
-        
-        gating_linear = feature_emb
-        gating = feature_emb
-        
-        if self.analyzing:
-            self.record_gating.append(gating.detach().clone().cpu())
-            self.record_gating_linear.append(gating_linear.detach().clone().cpu())
-        if self.training and self.analyzing:
-            gating.retain_grad()
-            gating_linear.retain_grad()
-        self.grad_var_list.append(gating)
-        self.grad_var_list.append(gating_linear)
 
         lr_logit = self.lr_layer(X)
-        cin_logit = self.cin(feature_emb, gating)
+        cin_logit = self.cin(feature_emb, feature_emb)
     
         y_pred = lr_logit + cin_logit # only LR + CIN
         if self.dnn is not None:
@@ -144,7 +113,7 @@ class CompressedInteractionNet(nn.Module):
         self.record_final_representation = []
         self.record_X_0 = []
 
-    def forward(self, feature_emb, gating=None):
+    def forward(self, feature_emb, mask=None):
         pooling_outputs = []
         X_0 = feature_emb
         batch_size = feature_emb.shape[0]

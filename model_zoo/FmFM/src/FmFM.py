@@ -1,26 +1,8 @@
-# =========================================================================
-# Copyright (C) 2024. The FuxiCTR Library. All rights reserved.
-# Copyright (C) 2022. Huawei Technologies Co., Ltd. All rights reserved.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# =========================================================================
-
-
 import torch
 from torch import nn
 from fuxictr.pytorch.models import BaseModel
 from fuxictr.pytorch.layers import FeatureEmbedding, LogisticRegression
-
+from fuxictr.pytorch import GEN
 
 class FmFM(BaseModel):
     """ The FmFM model
@@ -52,10 +34,6 @@ class FmFM(BaseModel):
             self.interaction_weight = nn.Parameter(torch.Tensor(interact_dim, embedding_dim, embedding_dim))
         else:
             raise ValueError("field_interaction_type={} is not supported.".format(self.field_interaction_type))
-        # self.feature_gating = FeatureSelection(feature_map, feature_map.sum_emb_out_dim(), embedding_dim, fs_hidden_units=[1000])
-        self.feature_gating = nn.Sequential(
-            nn.Linear(feature_map.sum_emb_out_dim(), feature_map.sum_emb_out_dim()),
-        )
         activation_dict = {
             'relu': nn.ReLU(),
             'tanh': nn.Tanh(),
@@ -76,6 +54,7 @@ class FmFM(BaseModel):
 
         self.cardinality = self.get_cardinality(feature_map)
         self.exp_group_idx = kwargs.get('exp_group_idx', None)
+        self.gen = GEN(feature_map, embedding_dim)
 
         self.compile(kwargs["optimizer"], kwargs["loss"], learning_rate)
         self.reset_parameters()
@@ -84,8 +63,8 @@ class FmFM(BaseModel):
     def init_record(self):
         self.record_interacted_feature = []
         self.record_feature_emb = []
-        self.record_gating = []
-        self.record_gating_linear = []
+        self.record_gen = []
+        self.record_gen_linear = []
         self.record_final_representation = []
 
     def get_cardinality(self, feature_map):
@@ -106,33 +85,18 @@ class FmFM(BaseModel):
         feature_emb = self.embedding_layer(X)
         if self.analyzing:
             self.record_feature_emb.append(feature_emb.detach().clone().cpu())
-        if self.training and self.analyzing:
-            feature_emb.retain_grad()
         self.feature_embedding_grad = feature_emb
 
-        if self.concat_emb:
-            gating_linear = self.feature_gating(feature_emb.flatten(1)).squeeze(-1).reshape_as(feature_emb)
-        else:
-            gating_linear = feature_emb
-        gating = self.nonlinear(gating_linear) * self.gamma
-        
-        if self.exp_group_idx is not None:
-            right_idx = 6 * (self.exp_group_idx + 1)
-            gating[:, self.cardinality[0:right_idx]] = feature_emb[:, self.cardinality[0:right_idx]]
-        # gating[:, self.cardinality[:2]] = feature_emb[:, self.cardinality[0:2]]
-
+        gen = self.gen(feature_emb)[0]
         if self.analyzing:
-            self.record_gating.append(gating.detach().clone().cpu())
-            self.record_gating_linear.append(gating_linear.detach().clone().cpu())
+            self.record_gen.append(gen.detach().clone().cpu())
         if self.training and self.analyzing:
-            gating.retain_grad()
-            gating_linear.retain_grad()
-        self.grad_var_list.append(gating)
-        self.grad_var_list.append(gating_linear)
+            gen.retain_grad()
+        self.grad_var_list.append(gen)
 
 
         left_emb = torch.index_select(feature_emb, 1, self.triu_index[0])
-        right_emb = torch.index_select(gating, 1, self.triu_index[1])
+        right_emb = torch.index_select(gen, 1, self.triu_index[1])
         if self.field_interaction_type == "vectorized":
             left_emb = left_emb * self.interaction_weight
         elif self.field_interaction_type == "matrixed":

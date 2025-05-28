@@ -1,19 +1,4 @@
-# =========================================================================
-# Copyright (C) 2024. The FuxiCTR Library. All rights reserved.
-# Copyright (C) 2022. Huawei Technologies Co., Ltd. All rights reserved.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# =========================================================================
+
 import torch
 import torch.nn as nn
 from fuxictr.pytorch.models import BaseModel
@@ -52,22 +37,12 @@ class FM(BaseModel):
         # Code for analyzing
         self.record_feature_emb = []
         self.record_y_pred = []
-        self.record_feature_emb_gating = []
-        self.record_gating = []
-        self.record_gating_linear = []
+        self.record_feature_emb_gen = []
+        self.record_gen = []
+        self.record_gen_linear = []
         self.record_final_representation = []
         self.record_left = []
         self.record_right = []
-
-    def compute_loss(self, return_dict, y_true):
-        if return_dict["y_pred"].shape[-1] == 1:
-            loss = self.loss_fn(return_dict["y_pred"], y_true, reduction='mean')
-        else:
-            loss = self.loss_fn(return_dict["y_pred"].flatten(), y_true.repeat(1, self.num_field).flatten(), reduction='mean')
-        loss += self.regularization_loss()
-        loss += self.cov_loss
-        loss += self.infonce_loss
-        return loss
 
     def forward(self, inputs):
         """
@@ -77,7 +52,6 @@ class FM(BaseModel):
         X = self.get_inputs(inputs)
         feature_emb = self.embedding_layer(X)
 
-        # self.cov_loss = self.compute_cov_loss(feature_emb.flatten(1), feature_emb.flatten(1))
         self.cov_loss = 0
 
         if self.analyzing:
@@ -86,26 +60,24 @@ class FM(BaseModel):
             feature_emb.retain_grad()
         self.feature_embedding_grad = feature_emb
 
-        gating, gating_linear = self.gen(feature_emb)
-        # self.infonce_loss = self.compute_infonce_loss(feature_emb, gating)
+        gen, gen_linear = self.gen(feature_emb)
         self.infonce_loss = 0
         # Code for analyzing
         if self.analyzing:
-            self.record_gating.append(gating.detach().clone().cpu())
-            self.record_gating_linear.append(gating_linear.detach().clone().cpu())
+            self.record_gen.append(gen.detach().clone().cpu())
+            self.record_gen_linear.append(gen_linear.detach().clone().cpu())
         if self.training and self.analyzing:
-            gating.retain_grad()
-            gating_linear.retain_grad()
-        self.grad_var_list.append(gating)
-        self.grad_var_list.append(gating_linear)
+            gen.retain_grad()
+            gen_linear.retain_grad()
+        self.grad_var_list.append(gen)
+        self.grad_var_list.append(gen_linear)
 
         row, col = torch.triu_indices(feature_emb.shape[1], feature_emb.shape[1], offset=1)
-        # row, col = torch.cat([row, col]), torch.cat([col, row])
-        left, right = gating[:, row], gating[:, col]
+        left, right = gen[:, row], gen[:, col]
         if self.symmetric:
-            left, right = gating[:, row], gating[:, col]
+            left, right = gen[:, row], gen[:, col]
         else:
-            left, right = gating[:, row], feature_emb[:, col]
+            left, right = gen[:, row], feature_emb[:, col]
 
         if self.analyzing:
             self.record_left.append(left.detach().clone().cpu())
@@ -135,4 +107,3 @@ class FM(BaseModel):
         y_pred = self.output_activation(y_pred) # [B, 1]
         return_dict = {"y_pred": y_pred}
         return return_dict
-

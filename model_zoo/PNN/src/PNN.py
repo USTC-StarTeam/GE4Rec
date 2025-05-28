@@ -1,19 +1,4 @@
-# =========================================================================
-# Copyright (C) 2024. The FuxiCTR Library. All rights reserved.
-# Copyright (C) 2022. Huawei Technologies Co., Ltd. All rights reserved.
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# =========================================================================
+
 
 from torch import nn
 import torch
@@ -66,8 +51,8 @@ class PNN(BaseModel):
 
     def init_record(self):
         self.record_feature_emb = []
-        self.record_gating = []
-        self.record_gating_linear = []
+        self.record_gen = []
+        self.record_gen_linear = []
         self.record_final_representation = []
 
     def forward(self, inputs):
@@ -83,13 +68,12 @@ class PNN(BaseModel):
             feature_emb.retain_grad()
         self.feature_embedding_grad = feature_emb
 
-        gating = self.gen(feature_emb)[0]
+        gen = self.gen(feature_emb)[0]
 
         row, col = torch.triu_indices(feature_emb.shape[1], feature_emb.shape[1], offset=1)
-        rst = gating[:, row] * feature_emb[:, col]
+        rst = gen[:, row] * feature_emb[:, col]
         inner_products = rst.sum(-1)
         
-        # inner_products = self.inner_product_layer(feature_emb)
         dense_input = torch.cat([feature_emb.flatten(start_dim=1), inner_products], dim=1)
         
         if self.analyzing:
