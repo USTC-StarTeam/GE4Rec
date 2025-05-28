@@ -68,7 +68,7 @@ xDeepFM_avazu_x4_001_579eef11: &default_avazu
     embedding_dim: 16
     embedding_dropout: 0
     embedding_regularizer: 0
-    epochs: 1
+    epochs: 100
     every_x_epochs: 1
     hidden_activations: relu
     learning_rate: 0.001
@@ -101,42 +101,8 @@ xDeepFM_avazu_x4_001_579eef11: &default_avazu
 xDeepFM_avazu:
     <<: *default_avazu
 
-xDeepFM_avazu_step:
-    <<: *default_avazu
-
 xDeepFM_avazu_fs:
     <<: *default_avazu
-    emb_activation: relu
-    concat_emb: true
-    gamma: 6
-
-xDeepFM_avazu_fs_debug:
-    <<: *default_avazu
-    emb_activation: relu
-    concat_emb: true
-    gamma: 6
-    use_gen_rst: true
-    gen_residual: false
-
-xDeepFM_avazu_fs_step:
-    <<: *default_avazu
-    emb_activation: relu
-    concat_emb: true
-    gamma: 6
-
-xDeepFM_avazu_linear:
-    <<: *default_avazu
-    emb_activation: linear
-    concat_emb: true
-    gamma: 6
-
-CIN_avazu:
-    <<: *default_avazu
-    dnn_hidden_units: []
-
-CIN_avazu_fs:
-    <<: *default_avazu
-    dnn_hidden_units: []
     emb_activation: relu
     concat_emb: true
     gamma: 6
@@ -187,83 +153,5 @@ xDeepFM_criteo:
 xDeepFM_criteo_fs: &default_criteo_fs
     <<: *default_criteo
     emb_activation: relu
-    symmetric: false
     concat_emb: true
     gamma: 0.01
-
-xDeepFM_criteo_fs_debug:
-    <<: *default_criteo_fs
-    use_gen_rst: true
-    gen_residual: true
-
-xDeepFM_criteo_linear:
-    <<: *default_criteo
-    emb_activation: linear
-    symmetric: false
-    concat_emb: true
-    gamma: 0.1
-
-CIN_criteo:
-    <<: *default_criteo
-    dnn_hidden_units: []
-
-CIN_criteo_fs:
-    <<: *default_criteo
-    dnn_hidden_units: []
-    emb_activation: relu
-    symmetric: false
-    concat_emb: true
-    gamma: 0.01
-
-xDeepFM_criteo_x4_001_d509bfbe: &default_criteo_x4
-    batch_norm: false
-    batch_size: 10000
-    cin_layer_units: [64, 64, 64]
-    dataset_id: criteo_x4_9ea3bdfc
-    debug: false
-    dnn_hidden_units: [1000, 1000, 1000, 1000, 1000]
-    embedding_dim: 16
-    embedding_dropout: 0
-    embedding_regularizer: 0.0001
-    epochs: 100
-    every_x_epochs: 1
-    hidden_activations: relu
-    learning_rate: 0.001
-    loss: binary_crossentropy
-    metrics: [logloss, AUC]
-    model: xDeepFM
-    model_id: xDeepFM_base
-    model_root: ./Criteo/xDeepFM_criteo_x4_001/
-    monitor: {AUC: 1, logloss: -1}
-    monitor_mode: max
-    net_dropout: 0.2
-    net_regularizer: 0
-    optimizer: adam
-    patience: 2
-    pickle_feature_encoder: true
-    save_best_only: true
-    seed: 2019
-    shuffle: true
-    task: binary_classification
-    use_hdf5: true
-    verbose: 1
-    workers: 3
-    use_fs: false
-    linear_fs: false
-    emb_activation: linear
-    symmetric: false
-    concat_emb: false
-    gamma: 1
-
-xDeepFM_criteo_x4:
-    <<: *default_criteo_x4
-
-xDeepFM_criteo_x4_fs: &default_criteo_x4_fs
-    <<: *default_criteo_x4
-    emb_activation: relu
-    symmetric: false
-    concat_emb: true
-    gamma: 0.1
-
-xDeepFM_criteo_x4_fs_debug:
-    <<: *default_criteo_x4_fs

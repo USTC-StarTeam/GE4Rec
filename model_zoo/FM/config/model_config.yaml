@@ -12,29 +12,6 @@ Base:
     feature_specs: null
     feature_config: null
 
-FM_test:
-    model: FM
-    dataset_id: tiny_npz
-    loss: binary_crossentropy
-    metrics: ['logloss', 'AUC']
-    task: binary_classification
-    optimizer: adam
-    learning_rate: 1.0e-3
-    regularizer: 1.e-8
-    batch_size: 128
-    embedding_dim: 4
-    epochs: 3
-    shuffle: True
-    seed: 2019
-    monitor: 'AUC'
-    monitor_mode: 'max'
-    use_fs: false
-    linear_fs: false
-    emb_activation: linear
-    symmetric: false
-    concat_emb: false
-    gamma: 1
-
 FM_default: # This is a config template
     model: FM
     dataset_id: TBD
@@ -90,81 +67,11 @@ FM_avazu_x4_003_a62c6000: &default_avazu
 FM_avazu:
     <<: *default_avazu
 
-FM_avazu_cov:
-    <<: *default_avazu
-    cov_reg: 0.00001
-
 FM_avazu_fs: &default_avazu_fs
     <<: *default_avazu
     concat_emb: true
     emb_activation: relu
     gamma: 6
-    epochs: 2
-
-FM_avazu_fs_debug:
-    <<: *default_avazu_fs
-
-FM_avazu_test:
-    <<: *default_avazu_fs
-    gamma: 18
-
-FM_avazu_linear:
-    <<: *default_avazu
-    concat_emb: true
-    emb_activation: linear
-    gamma: 6
-
-FM_avazu_symmetric:
-    <<: *default_avazu_fs
-    symmetric: true
-
-FM_avazu_sigmoid:
-    <<: *default_avazu_fs
-    emb_activation: sigmoid
-
-FM_avazu_tanh:
-    <<: *default_avazu_fs
-    emb_activation: tanh
-
-FM_avazu_elu:
-    <<: *default_avazu_fs
-    emb_activation: elu
-
-FM_avazu_silu:
-    <<: *default_avazu_fs
-    emb_activation: silu
-
-FM_avazu_ab_no_sigma:
-    <<: *default_avazu
-    concat_emb: true
-    emb_activation: linear
-    gamma: 6
-
-FM_avazu_ab_no_concat:
-    <<: *default_avazu
-    concat_emb: false
-    emb_activation: relu
-    gamma: 6
-    small_transformation: true
-
-FM_avazu_ab_no_concat_no_w:
-    <<: *default_avazu
-    concat_emb: false
-    emb_activation: relu
-    gamma: 6
-
-
-FM_avazu_group0:
-    <<: *default_avazu_fs
-    exp_group_idx: 0
-
-FM_avazu_group1:
-    <<: *default_avazu_fs
-    exp_group_idx: 1
-
-FM_avazu_group2:
-    <<: *default_avazu_fs
-    exp_group_idx: 2
 
 FM_criteo_x1_001_bea53d16: &default_criteo
     batch_size: 4096
@@ -208,94 +115,3 @@ FM_criteo_fs: &default_criteo_fs
     emb_activation: relu
     concat_emb: true
     gamma: 0.1
-
-FM_criteo_symmetric:
-    <<: *default_criteo_fs
-    symmetric: true
-
-FM_criteo_sigmoid:
-    <<: *default_criteo_fs
-    emb_activation: sigmoid
-
-FM_criteo_tanh:
-    <<: *default_criteo_fs
-    emb_activation: tanh
-
-FM_criteo_elu:
-    <<: *default_criteo_fs
-    emb_activation: elu
-
-FM_criteo_silu:
-    <<: *default_criteo_fs
-    emb_activation: silu
-
-FM_criteo_test:
-    <<: *default_criteo
-    emb_activation: relu
-    symmetric: false
-    concat_emb: true
-    gamma: 0.1
-
-FM_criteo_group0:
-    <<: *default_criteo_fs
-    exp_group_idx: 0
-
-FM_criteo_group1:
-    <<: *default_criteo_fs
-    exp_group_idx: 1
-
-FM_criteo_group2:
-    <<: *default_criteo_fs
-    exp_group_idx: 2
-
-FM_criteo_group3:
-    <<: *default_criteo_fs
-    exp_group_idx: 3
-
-FM_criteo_fs_debug:
-    <<: *default_criteo_fs
-
-FM_criteo_x4_003_c13a1abf: &default_criteo_x4
-    batch_size: 10000
-    dataset_id: criteo_x4_9ea3bdfc
-    debug: false
-    embedding_dim: 16
-    embedding_dropout: 0
-    epochs: 100
-    every_x_epochs: 1
-    learning_rate: 0.001
-    loss: binary_crossentropy
-    metrics: [logloss, AUC]
-    model: FM
-    model_id: FM_base
-    model_root: ./Criteo/FM_criteo_x4_001/
-    monitor: {AUC: 1, logloss: -1}
-    monitor_mode: max
-    optimizer: adam
-    patience: 2
-    pickle_feature_encoder: true
-    regularizer: 1.0e-05
-    save_best_only: true
-    seed: 2019
-    shuffle: true
-    task: binary_classification
-    use_hdf5: true
-    verbose: 1
-    workers: 3
-    use_fs: false
-    linear_fs: false
-    emb_activation: linear
-    symmetric: false
-    concat_emb: false
-    gamma: 1
-    small_transformation: false
-
-FM_criteo_x4:
-    <<: *default_criteo_x4
-
-FM_criteo_x4_fs:
-    <<: *default_criteo_x4
-    emb_activation: relu
-    symmetric: false
-    concat_emb: true
-    gamma: 6
