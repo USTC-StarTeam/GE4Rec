@@ -38,8 +38,6 @@ class xDeepFM(BaseModel):
             'silu': nn.SiLU(),
             'linear': nn.Identity(),
         }
-        self.nonlinear = activation_dict[kwargs['emb_activation']] if not kwargs['linear_fs'] else nn.Identity()
-        self.use_fs = kwargs["use_fs"]
         self.concat_emb = kwargs["concat_emb"]
         self.gamma = kwargs["gamma"]
         self.symmetric = kwargs["symmetric"]

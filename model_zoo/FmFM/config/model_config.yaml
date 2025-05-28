@@ -76,8 +76,6 @@ FmFM_criteo_x1_001_9ba4938b: &default_criteo
     task: binary_classification
     use_hdf5: true
     verbose: 1
-    use_fs: false
-    linear_fs: false
     emb_activation: linear
     symmetric: false
     concat_emb: false
@@ -86,7 +84,7 @@ FmFM_criteo_x1_001_9ba4938b: &default_criteo
 FmFM_criteo:
     <<: *default_criteo
 
-FmFM_criteo_fs:
+FmFM_criteo_gen:
     <<: *default_criteo
     emb_activation: relu
     symmetric: false
@@ -121,8 +119,6 @@ FmFM_avazu_x4_002_a09a4da9: &default_avazu
     task: binary_classification
     use_hdf5: true
     verbose: 1
-    use_fs: false
-    linear_fs: false
     emb_activation: linear
     symmetric: false
     concat_emb: false
@@ -131,7 +127,7 @@ FmFM_avazu_x4_002_a09a4da9: &default_avazu
 FmFM_avazu:
     <<: *default_avazu
 
-FmFM_avazu_fs:
+FmFM_avazu_gen:
     <<: *default_avazu
     emb_activation: relu
     concat_emb: true

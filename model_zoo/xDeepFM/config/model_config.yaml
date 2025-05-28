@@ -91,8 +91,6 @@ xDeepFM_avazu_x4_001_579eef11: &default_avazu
     use_hdf5: true
     verbose: 1
     workers: 3
-    use_fs: false
-    linear_fs: false
     emb_activation: linear
     symmetric: false
     concat_emb: false
@@ -101,7 +99,7 @@ xDeepFM_avazu_x4_001_579eef11: &default_avazu
 xDeepFM_avazu:
     <<: *default_avazu
 
-xDeepFM_avazu_fs:
+xDeepFM_avazu_gen:
     <<: *default_avazu
     emb_activation: relu
     concat_emb: true
@@ -140,8 +138,6 @@ xDeepFM_criteo_x1_001_e08ec7de: &default_criteo
     task: binary_classification
     use_hdf5: true
     verbose: 1
-    use_fs: false
-    linear_fs: false
     emb_activation: linear
     symmetric: false
     concat_emb: false
@@ -150,7 +146,7 @@ xDeepFM_criteo_x1_001_e08ec7de: &default_criteo
 xDeepFM_criteo:
     <<: *default_criteo
 
-xDeepFM_criteo_fs: &default_criteo_fs
+xDeepFM_criteo_gen: &default_criteo_gen
     <<: *default_criteo
     emb_activation: relu
     concat_emb: true

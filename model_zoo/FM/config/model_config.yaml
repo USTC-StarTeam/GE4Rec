@@ -56,8 +56,6 @@ FM_avazu_x4_003_a62c6000: &default_avazu
     use_hdf5: true
     verbose: 1
     workers: 3
-    use_fs: false
-    linear_fs: false
     emb_activation: linear
     symmetric: false
     concat_emb: false
@@ -67,7 +65,7 @@ FM_avazu_x4_003_a62c6000: &default_avazu
 FM_avazu:
     <<: *default_avazu
 
-FM_avazu_fs: &default_avazu_fs
+FM_avazu_gen: &default_avazu_gen
     <<: *default_avazu
     concat_emb: true
     emb_activation: relu
@@ -99,8 +97,6 @@ FM_criteo_x1_001_bea53d16: &default_criteo
     task: binary_classification
     use_hdf5: true
     verbose: 1
-    use_fs: false
-    linear_fs: false
     emb_activation: linear
     symmetric: false
     concat_emb: false
@@ -110,7 +106,7 @@ FM_criteo_x1_001_bea53d16: &default_criteo
 FM_criteo:
     <<: *default_criteo
 
-FM_criteo_fs: &default_criteo_fs
+FM_criteo_gen: &default_criteo_gen
     <<: *default_criteo
     emb_activation: relu
     concat_emb: true

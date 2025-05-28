@@ -67,7 +67,7 @@ DATASET_ID = dataset_id_dict[dataset_name] # criteo_x1_7b681156, frappe_x1_04e96
 MODEL_NAME = args.model_name
 suffix_data = '_avazu' if dataset_name == 'Avazu' else '_criteo'
 # suffix = [suffix_data + '', suffix_data + '_nonlinear_x0']
-suffix = [suffix_data + '', suffix_data + '_fs']
+suffix = [suffix_data + '', suffix_data + '_gen']
 print(f'Ploting {MODEL_NAME} on {dataset_name}!!!')
 printed_name = suffix
 printed_name = [MODEL_NAME + _ for _ in printed_name]

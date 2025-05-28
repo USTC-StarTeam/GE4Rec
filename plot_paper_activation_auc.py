@@ -57,7 +57,7 @@ activations = ['sigmoid', 'tanh', 'silu', 'relu']
 
 MODEL_NAME = args.model_name
 suffix_data = '_avazu' if dataset_name == 'Avazu' else '_criteo'
-suffix = [suffix_data + '', suffix_data + '_fs'] + [suffix_data + f'_{act}' for act in activations[1:]]
+suffix = [suffix_data + '', suffix_data + '_gen'] + [suffix_data + f'_{act}' for act in activations[1:]]
 
 MODEL_NAME = args.model_name
 

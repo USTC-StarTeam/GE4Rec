@@ -4,9 +4,9 @@ model_name=DeepFM
 echo "Generating embeddings for analysis"
 
 python analyze.py --model ${model_name} --expid ${model_name}_avazu --gpu 3
-python analyze.py --model ${model_name} --expid ${model_name}_avazu_fs --gpu 3
+python analyze.py --model ${model_name} --expid ${model_name}_avazu_gen --gpu 3
 python analyze.py --model ${model_name} --expid ${model_name}_criteo --gpu 0
-python analyze.py --model ${model_name} --expid ${model_name}_criteo_fs --gpu 0
+python analyze.py --model ${model_name} --expid ${model_name}_criteo_gen --gpu 0
 
 echo "Plot figures. (Note: ablation studies are only conducted for DCN V2 on Avazu)"
 

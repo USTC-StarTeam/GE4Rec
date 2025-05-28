@@ -56,7 +56,7 @@ DATASET_ID = dataset_id_dict[dataset_name] # criteo_x1_7b681156, frappe_x1_04e96
 activations = ['sigmoid', 'relu', 'tanh', 'silu', 'elu']
 
 MODEL_NAME = args.model_name
-suffix = ['_avazu', '_avazu_fs', '_criteo', '_criteo_fs']
+suffix = ['_avazu', '_avazu_gen', '_criteo', '_criteo_gen']
 print(f'Ploting {MODEL_NAME} on {dataset_name}!!!')
 printed_name = suffix
 printed_name = [MODEL_NAME + _ for _ in printed_name]

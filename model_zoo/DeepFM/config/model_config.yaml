@@ -66,8 +66,6 @@ DeepFM_avazu_base: &default_avazu
     use_hdf5: true
     verbose: 1
     workers: 3
-    use_fs: false
-    linear_fs: false
     emb_activation: linear
     symmetric: false
     concat_emb: false
@@ -77,7 +75,7 @@ DeepFM_avazu_base: &default_avazu
 DeepFM_avazu:
     <<: *default_avazu
 
-DeepFM_avazu_fs: &default_avazu_fs
+DeepFM_avazu_gen: &default_avazu_gen
     <<: *default_avazu
     emb_activation: relu
     concat_emb: true
@@ -115,8 +113,6 @@ DeepFM_criteo_x1_001_4b788fed: &default_criteo
     task: binary_classification
     use_hdf5: true
     verbose: 1
-    use_fs: false
-    linear_fs: false
     emb_activation: linear
     symmetric: false
     concat_emb: false
@@ -126,7 +122,7 @@ DeepFM_criteo_x1_001_4b788fed: &default_criteo
 DeepFM_criteo:
     <<: *default_criteo
 
-DeepFM_criteo_fs: &default_criteo_fs
+DeepFM_criteo_gen: &default_criteo_gen
     <<: *default_criteo
     emb_activation: relu
     symmetric: false

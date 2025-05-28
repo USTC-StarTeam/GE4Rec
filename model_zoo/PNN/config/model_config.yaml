@@ -88,8 +88,6 @@ PNN_avazu_x4_009_3c99a8b5: &default_avazu
     use_hdf5: true
     verbose: 1
     workers: 3
-    use_fs: false
-    linear_fs: false
     emb_activation: linear
     symmetric: false
     concat_emb: false
@@ -99,7 +97,7 @@ PNN_avazu_x4_009_3c99a8b5: &default_avazu
 PNN_avazu:
     <<: *default_avazu
 
-PNN_avazu_fs:
+PNN_avazu_gen:
     <<: *default_avazu
     emb_activation: relu
     concat_emb: true
@@ -136,8 +134,6 @@ PNN_criteo_x1_007_491aff75: &default_criteo
     task: binary_classification
     use_hdf5: true
     verbose: 1
-    use_fs: false
-    linear_fs: false
     emb_activation: linear
     symmetric: false
     concat_emb: false
@@ -146,7 +142,7 @@ PNN_criteo_x1_007_491aff75: &default_criteo
 PNN_criteo:
     <<: *default_criteo
 
-PNN_criteo_fs:
+PNN_criteo_gen:
     <<: *default_criteo
     emb_activation: relu
     symmetric: false

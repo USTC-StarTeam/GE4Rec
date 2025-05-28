@@ -78,8 +78,6 @@ DCNv2_criteo_x1_001_28c60688: &default_criteo
     use_hdf5: true
     use_low_rank_mixture: false
     verbose: 1
-    use_fs: false
-    linear_fs: false
     emb_activation: linear
     symmetric: false
     concat_emb: false
@@ -91,7 +89,7 @@ DCNv2_criteo_x1_001_28c60688: &default_criteo
 DCNv2_criteo:
     <<: *default_criteo
 
-DCNv2_criteo_fs: &default_criteo_fs
+DCNv2_criteo_gen: &default_criteo_gen
     <<: *default_criteo
     emb_activation: relu
     concat_emb: true
@@ -104,8 +102,8 @@ CrossNet_criteo:
     <<: *default_criteo
     model_structure: crossnet_only
 
-CrossNet_criteo_fs:
-    <<: *default_criteo_fs
+CrossNet_criteo_gen:
+    <<: *default_criteo_gen
     emb_activation: relu
     model_structure: crossnet_only
 
@@ -147,8 +145,6 @@ DCNv2_avazu_x4_011_19794dc6: &default_avazu
     use_hdf5: true
     use_low_rank_mixture: false
     verbose: 1
-    use_fs: false
-    linear_fs: false
     emb_activation: linear
     symmetric: false
     concat_emb: false
@@ -158,7 +154,7 @@ DCNv2_avazu_x4_011_19794dc6: &default_avazu
 DCNv2_avazu:
     << : *default_avazu
 
-DCNv2_avazu_fs: &default_avazu_fs
+DCNv2_avazu_gen: &default_avazu_gen
     << : *default_avazu
     emb_activation: relu
     concat_emb: true
@@ -171,6 +167,6 @@ CrossNet_avazu:
     << : *default_avazu
     model_structure: crossnet_only
 
-CrossNet_avazu_fs:
-    << : *default_avazu_fs
+CrossNet_avazu_gen:
+    << : *default_avazu_gen
     model_structure: crossnet_only

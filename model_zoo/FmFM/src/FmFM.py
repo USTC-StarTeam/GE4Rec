@@ -43,8 +43,8 @@ class FmFM(BaseModel):
             'silu': nn.SiLU(),
             'linear': nn.Identity(),
         }
-        self.nonlinear = activation_dict[kwargs['emb_activation']] if not kwargs['linear_fs'] else nn.Identity()
-        self.use_fs = kwargs["use_fs"]
+        self.nonlinear = activation_dict[kwargs['emb_activation']] if not kwargs['linear_gen'] else nn.Identity()
+        self.use_gen = kwargs["use_gen"]
         self.concat_emb = kwargs["concat_emb"]
         self.gamma = kwargs["gamma"]
         self.symmetric = kwargs["symmetric"]

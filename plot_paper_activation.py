@@ -57,7 +57,7 @@ activations = ['relu', 'linear', 'sigmoid', 'tanh', 'silu']
 
 MODEL_NAME = args.model_name
 suffix_data = '_avazu' if dataset_name == 'Avazu' else '_criteo'
-suffix = [suffix_data + ''] + [suffix_data + f'_{act}' for act in activations[1:]] + [suffix_data + '_fs']
+suffix = [suffix_data + ''] + [suffix_data + f'_{act}' for act in activations[1:]] + [suffix_data + '_gen']
 print(f'Ploting {MODEL_NAME} on {dataset_name}!!!')
 printed_name = suffix
 printed_name = [MODEL_NAME + _ for _ in printed_name]
