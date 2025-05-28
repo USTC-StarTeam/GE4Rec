@@ -1,0 +1,223 @@
+Base:
+    model_root: './checkpoints/'
+    num_workers: 3
+    verbose: 1
+    early_stop_patience: 2
+    pickle_feature_encoder: True
+    save_best_only: True
+    eval_steps: null
+    debug_mode: False
+    group_id: null
+    use_features: null
+    feature_specs: null
+    feature_config: null
+
+PNN_test:
+    model: PNN
+    dataset_id: tiny_npz
+    loss: 'binary_crossentropy'
+    metrics: ['logloss', 'AUC']
+    task: binary_classification
+    optimizer: adam
+    learning_rate: 1.e-3
+    embedding_regularizer: 1.e-8
+    net_regularizer: 0
+    batch_size: 128
+    embedding_dim: 4
+    hidden_units: [64, 32]
+    hidden_activations: relu
+    net_dropout: 0
+    batch_norm: False
+    epochs: 1
+    shuffle: True
+    seed: 2019
+    monitor: 'AUC'
+    monitor_mode: 'max'
+
+PNN_default: # This is a config template
+    model: PNN
+    dataset_id: TBD
+    loss: 'binary_crossentropy'
+    metrics: ['logloss', 'AUC']
+    task: binary_classification
+    optimizer: adam
+    hidden_units: [300, 300, 300]
+    hidden_activations: relu
+    embedding_regularizer: 0
+    net_regularizer: 0
+    learning_rate: 1.e-3
+    net_dropout: 0
+    batch_norm: False
+    batch_size: 10000
+    embedding_dim: 40
+    epochs: 100
+    shuffle: True
+    seed: 2019
+    monitor: {'AUC': 1, 'logloss': -1}
+    monitor_mode: 'max'
+
+PNN_avazu_x4_009_3c99a8b5: &default_avazu
+    batch_norm: false
+    batch_size: 10000
+    dataset_id: avazu_x4_3bbbc4c9
+    debug: false
+    embedding_dim: 16
+    embedding_dropout: 0
+    embedding_regularizer: 1.0e-09
+    epochs: 1
+    every_x_epochs: 1
+    hidden_activations: relu
+    hidden_units: [1000, 1000, 1000]
+    learning_rate: 0.001
+    loss: binary_crossentropy
+    metrics: [logloss, AUC]
+    model: PNN
+    model_id: PNN_base
+    model_root: ./Avazu/PNN_avazu_x4_001/
+    monitor: {AUC: 1, logloss: -1}
+    monitor_mode: max
+    net_dropout: 0
+    net_regularizer: 0
+    optimizer: adam
+    patience: 2
+    pickle_feature_encoder: true
+    save_best_only: true
+    seed: 2019
+    shuffle: true
+    task: binary_classification
+    use_hdf5: true
+    verbose: 1
+    workers: 3
+    use_fs: false
+    linear_fs: false
+    emb_activation: linear
+    symmetric: false
+    concat_emb: false
+    gamma: 1
+    small_transformation: false
+
+PNN_avazu:
+    <<: *default_avazu
+
+PNN_avazu_step:
+    <<: *default_avazu
+
+PNN_avazu_fs:
+    <<: *default_avazu
+    emb_activation: relu
+    concat_emb: true
+    gamma: 6
+
+PNN_avazu_fs_debug:
+    <<: *default_avazu
+    emb_activation: relu
+    concat_emb: true
+
+PNN_avazu_fs_step:
+    <<: *default_avazu
+    emb_activation: relu
+    concat_emb: true
+    gamma: 6
+
+PNN_avazu_linear:
+    <<: *default_avazu
+    emb_activation: linear
+    concat_emb: true
+    gamma: 6
+
+PNN_criteo_x1_007_491aff75: &default_criteo
+    batch_norm: true
+    batch_size: 4096
+    dataset_id: criteo_x1_7b681156
+    debug: false
+    embedding_dim: 10
+    embedding_regularizer: 1.0e-05
+    epochs: 100
+    every_x_epochs: 1
+    hidden_activations: relu
+    hidden_units: [400, 400, 400]
+    learning_rate: 0.001
+    loss: binary_crossentropy
+    metrics: [AUC, logloss]
+    model: PNN
+    model_id: PNN_base
+    model_root: ./Criteo/PNN_criteo_x1/
+    monitor: AUC
+    monitor_mode: max
+    net_dropout: 0.1
+    net_regularizer: 0
+    num_workers: 3
+    optimizer: adam
+    patience: 3
+    pickle_feature_encoder: true
+    save_best_only: true
+    seed: 2021
+    shuffle: true
+    task: binary_classification
+    use_hdf5: true
+    verbose: 1
+    use_fs: false
+    linear_fs: false
+    emb_activation: linear
+    symmetric: false
+    concat_emb: false
+    gamma: 1
+
+PNN_criteo:
+    <<: *default_criteo
+
+PNN_criteo_fs:
+    <<: *default_criteo
+    emb_activation: relu
+    symmetric: false
+    concat_emb: true
+    gamma: 0.005
+
+PNN_criteo_x4_002_69a1df28: &default_criteo_x4
+    batch_norm: false
+    batch_size: 10000
+    dataset_id: criteo_x4_9ea3bdfc
+    debug: false
+    embedding_dim: 16
+    embedding_dropout: 0
+    embedding_regularizer: 1.0e-05
+    epochs: 100
+    every_x_epochs: 1
+    hidden_activations: relu
+    hidden_units: [1000, 1000]
+    learning_rate: 0.001
+    loss: binary_crossentropy
+    metrics: [logloss, AUC]
+    model: PNN
+    model_id: PNN_base
+    model_root: ./Criteo/PNN_criteo_x4_001/
+    monitor: {AUC: 1, logloss: -1}
+    monitor_mode: max
+    net_dropout: 0.2
+    net_regularizer: 0
+    optimizer: adam
+    patience: 2
+    pickle_feature_encoder: true
+    save_best_only: true
+    seed: 2019
+    shuffle: true
+    task: binary_classification
+    use_hdf5: true
+    verbose: 1
+    workers: 3
+    use_fs: false
+    linear_fs: false
+    emb_activation: linear
+    symmetric: false
+    concat_emb: false
+    gamma: 1
+
+PNN_criteo_x4:
+    <<: *default_criteo_x4
+
+PNN_criteo_x4_fs:
+    <<: *default_criteo_x4
+    emb_activation: relu
+    symmetric: false
+    concat_emb: true
+    gamma: 0.005

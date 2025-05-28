@@ -1,0 +1,104 @@
+### Tiny data for tests only
+tiny_npz:
+    data_root: ../../data/
+    data_format: npz
+    train_data: ../../data/tiny_npz/train.npz
+    valid_data: ../../data/tiny_npz/valid.npz
+    test_data: ../../data/tiny_npz/test.npz
+# criteo_x1_7b681156:
+#     data_format: csv
+#     data_root: ../../data/Criteo/
+#     feature_cols:
+#     -   active: true
+#         dtype: float
+#         name: [I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13]
+#         type: numeric
+#     -   active: true
+#         dtype: float
+#         name: [C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16,
+#             C17, C18, C19, C20, C21, C22, C23, C24, C25, C26]
+#         type: categorical
+#     label_col: {dtype: float, name: label}
+#     min_categr_count: 1
+#     test_data: ../../data/Criteo/Criteo_x1/test.csv
+#     train_data: ../../data/Criteo/Criteo_x1/train.csv
+#     valid_data: ../../data/Criteo/Criteo_x1/valid.csv
+
+avazu_x4_3bbbc4c9:
+    data_format: csv
+    data_root: ../../data/Avazu/
+    feature_cols:
+    - {active: false, dtype: str, name: id, type: categorical}
+    - {active: true, dtype: str, name: hour, preprocess: convert_hour, type: categorical}
+    -   active: true
+        dtype: str
+        name: [C1, banner_pos, site_id, site_domain, site_category, app_id, app_domain,
+            app_category, device_id, device_ip, device_model, device_type, device_conn_type,
+            C14, C15, C16, C17, C18, C19, C20, C21]
+        type: categorical
+    - {active: true, dtype: str, name: weekday, preprocess: convert_weekday, type: categorical}
+    - {active: true, dtype: str, name: weekend, preprocess: convert_weekend, type: categorical}
+    label_col: {dtype: float, name: click}
+    min_categr_count: 2
+    rebuild_dataset: true
+    test_data: ../../data/Avazu/avazu_x4_3bbbc4c9/test.csv
+    train_data: ../../data/Avazu/avazu_x4_3bbbc4c9/train.csv
+    valid_data: ../../data/Avazu/avazu_x4_3bbbc4c9/valid.csv
+
+criteo_x1_7b681156:
+    data_format: csv
+    data_root: ../../data/Criteo/
+    feature_cols:
+    -   active: true
+        dtype: float
+        name: [I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13]
+        type: numeric
+    -   active: true
+        dtype: float
+        name: [C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16,
+            C17, C18, C19, C20, C21, C22, C23, C24, C25, C26]
+        type: categorical
+    label_col: {dtype: float, name: label}
+    min_categr_count: 1
+    test_data: ../../data/Criteo/criteo_x1_7b681156/test.csv
+    train_data: ../../data/Criteo/criteo_x1_7b681156/train.csv
+    valid_data: ../../data/Criteo/criteo_x1_7b681156/valid.csv
+    rebuild_dataset: true
+
+criteo_x4_9ea3bdfc:
+    data_format: csv
+    data_root: ../../data/Criteo/
+    feature_cols:
+    -   active: true
+        dtype: float
+        na_value: 0
+        name: [I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13]
+        preprocess: convert_to_bucket
+        type: categorical
+    -   active: true
+        dtype: str
+        na_value: ''
+        name: [C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12, C13, C14, C15, C16,
+            C17, C18, C19, C20, C21, C22, C23, C24, C25, C26]
+        type: categorical
+    label_col: {dtype: float, name: Label}
+    min_categr_count: 10
+    rebuild_dataset: true
+    test_data: ../../data/Criteo/criteo_x4_9ea3bdfc/test.parquet
+    train_data: ../../data/Criteo/criteo_x4_9ea3bdfc/train.csv
+    valid_data: ../../data/Criteo/criteo_x4_9ea3bdfc/valid.csv
+
+frappe_x1_04e961e9:
+    data_format: csv
+    data_root: ../../data/Frappe/
+    feature_cols:
+    -   active: true
+        dtype: float
+        name: [user, item, daytime, weekday, isweekend, homework, cost, weather, country,
+            city]
+        type: categorical
+    label_col: {dtype: float, name: label}
+    min_categr_count: 1
+    test_data: ../../data/Frappe/Frappe_x1/test.csv
+    train_data: ../../data/Frappe/Frappe_x1/train.csv
+    valid_data: ../../data/Frappe/Frappe_x1/valid.csv

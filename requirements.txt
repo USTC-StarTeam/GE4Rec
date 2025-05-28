@@ -1,0 +1,13 @@
+keras_preprocessing
+pandas
+PyYAML
+scikit-learn
+numpy
+h5py
+tqdm
+pyarrow
+polars
+matplotlib
+gpustat
+ipykernel
+seaborn
