@@ -31,7 +31,7 @@ bash 3.analyze.sh
 
 ### Faster training with preprocessed data (Highly Recommended!!!)
 
-   After the first run, FuxiCTR generates the `parquet` format dataset (that can be found in `data/Avazu/avazu_x4_3bbbc4c9`). You should change the following entries for faster training:
+   After the first run, FuxiCTR generates the `parquet` format dataset (that can be found in `data/Avazu/avazu_x4_3bbbc4c9`). You should change the following entries of dataset config files for faster training. For example, in `model_zoo/FM/config/dataset_config.yaml`, and similarly for other models, make these changes:
    ```yaml
    avazu_x4_3bbbc4c9:
       data_format: parquet # original: csv
