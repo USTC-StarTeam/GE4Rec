@@ -45,7 +45,7 @@ bash 3.analyze.sh
 
 ### Generate other embeddings for analysis
 
-After experiments, we can perform model inference based on the saved checkpoints.
+After experiments, we can perform model inference based on the saved checkpoints (e.g., `model_zoo/DeepFM/Avazu/DeepFM_avazu_x4_001/avazu_x4_3bbbc4c9/`).
 
 1. We should register embeddings that need to be saved in a `init_record` function (please refer to `model_zoo/DCNv2/src/DCNv2.py`). This should follow a `record_XXX` format, where `XXX` is the name of embeddings that you want to save for future analysis. The following line will save the feature embeddings. Remarkably, embeddings required for analysis in the paper have already been registered.
 
