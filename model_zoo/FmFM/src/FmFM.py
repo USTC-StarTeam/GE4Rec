@@ -40,7 +40,7 @@ class FmFM(BaseModel):
 
         self.cardinality = self.get_cardinality(feature_map)
         self.exp_group_idx = kwargs.get('exp_group_idx', None)
-        self.gen = GEN(feature_map, embedding_dim)
+        self.gen = GEN(feature_map, embedding_dim, **kwargs)
 
         self.compile(kwargs["optimizer"], kwargs["loss"], learning_rate)
         self.reset_parameters()
