@@ -34,20 +34,6 @@ class FmFM(BaseModel):
             self.interaction_weight = nn.Parameter(torch.Tensor(interact_dim, embedding_dim, embedding_dim))
         else:
             raise ValueError("field_interaction_type={} is not supported.".format(self.field_interaction_type))
-        activation_dict = {
-            'relu': nn.ReLU(),
-            'tanh': nn.Tanh(),
-            'sigmoid': nn.Sigmoid(),
-            'prelu': nn.PReLU(),
-            'elu': nn.ELU(),
-            'silu': nn.SiLU(),
-            'linear': nn.Identity(),
-        }
-        self.nonlinear = activation_dict[kwargs['emb_activation']] if not kwargs['linear_gen'] else nn.Identity()
-        self.use_gen = kwargs["use_gen"]
-        self.concat_emb = kwargs["concat_emb"]
-        self.gamma = kwargs["gamma"]
-        self.symmetric = kwargs["symmetric"]
         nn.init.xavier_normal_(self.interaction_weight)
         self.lr_layer = LogisticRegression(feature_map)
         self.triu_index = torch.triu_indices(num_fields, num_fields, offset=1).to(self.device)
@@ -93,7 +79,6 @@ class FmFM(BaseModel):
         if self.training and self.analyzing:
             gen.retain_grad()
         self.grad_var_list.append(gen)
-
 
         left_emb = torch.index_select(feature_emb, 1, self.triu_index[0])
         right_emb = torch.index_select(gen, 1, self.triu_index[1])
