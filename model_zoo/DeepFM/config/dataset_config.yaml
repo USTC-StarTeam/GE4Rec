@@ -27,7 +27,7 @@ criteo_x1_7b681156:
     valid_data: ../../data/Criteo/criteo_x1_7b681156/valid.csv
 
 avazu_x4_3bbbc4c9:
-    data_format: parquet
+    data_format: csv
     data_root: ../../data/Avazu/
     feature_cols:
     - {active: false, dtype: str, name: id, type: categorical}
@@ -42,7 +42,7 @@ avazu_x4_3bbbc4c9:
     - {active: true, dtype: str, name: weekend, preprocess: convert_weekend, type: categorical}
     label_col: {dtype: float, name: click}
     min_categr_count: 2
-    rebuild_dataset: false
-    test_data: ../../data/Avazu/avazu_x4_3bbbc4c9/test.parquet
-    train_data: ../../data/Avazu/avazu_x4_3bbbc4c9/train.parquet
-    valid_data: ../../data/Avazu/avazu_x4_3bbbc4c9/valid.parquet
+    rebuild_dataset: true
+    test_data: ../../data/Avazu/avazu_x4_3bbbc4c9/test.csv
+    train_data: ../../data/Avazu/avazu_x4_3bbbc4c9/train.csv
+    valid_data: ../../data/Avazu/avazu_x4_3bbbc4c9/valid.csv
