@@ -1,69 +1,140 @@
-# Quickstart
+# From Feature Interaction to Feature Generation
 
-This repo is the code of ICML2025 submission "From Feature Interaction to Feature Generation: A Generative Paradigm of CTR Prediction Models".
-This repo is implemented based on [FuxiCTR](https://github.com/reczoo/FuxiCTR).
+[![arXiv](https://img.shields.io/badge/arXiv-2512.14041-b31b1b.svg)](https://arxiv.org/abs/2512.14041)
+[![ICML 2025](https://img.shields.io/badge/ICML-2025-4b6cb7.svg)](https://icml.cc/)
+[![FuxiCTR](https://img.shields.io/badge/Based%20on-FuxiCTR-2d7dd2.svg)](https://github.com/reczoo/FuxiCTR)
 
-## Enviroments
+Official code for **"From Feature Interaction to Feature Generation: A Generative Paradigm of CTR Prediction Models"**.
 
-```bash
-conda create -n FuxiCTR_analysis python=3.10 -y
-conda activate FuxiCTR_analysis
-pip3 install torch torchvision torchaudio
-pip3 install -r requirements.txt
+This repository implements **Supervised Feature Generation (SFG)**, a generative reformulation for click-through rate prediction models. Instead of relying only on discriminative interactions among raw ID embeddings, SFG learns an encoder-decoder process that generates feature representations under supervised CTR labels and can be integrated into existing CTR backbones.
+
+## 1. Paper
+
+Mingjia Yin, Junwei Pan, Hao Wang, Ximei Wang, Shangyu Zhang, Jie Jiang, Defu Lian, and Enhong Chen. **From Feature Interaction to Feature Generation: A Generative Paradigm of CTR Prediction Models.** Proceedings of the 42nd International Conference on Machine Learning (ICML), PMLR 267, 2025. [arXiv:2512.14041](https://arxiv.org/abs/2512.14041), [OpenReview](https://openreview.net/forum?id=DatAXrGzlc).
+
+## 2. Highlights
+
+- Reframes CTR prediction from **feature interaction** to **feature generation**.
+- Adds a supervised encoder-decoder path that mitigates embedding dimensional collapse and information redundancy.
+- Generalizes across common FuxiCTR-style backbones, including FM, FmFM, CrossNet V2, DeepFM, xDeepFM, IPNN, and DCN V2.
+- Includes scripts for dataset preparation, model reproduction, embedding extraction, and paper-style analysis plots.
+
+## 3. Method At A Glance
+
+![GE4Rec method overview](docs/assets/ge4rec-method-overview.png)
+
+SFG constructs hidden embeddings with an encoder and uses a decoder to regenerate feature embeddings. The generated representations are then consumed by the downstream CTR interaction module and optimized with supervised click labels, making the generative paradigm compatible with existing CTR models.
+
+## 4. Repository Structure
+
+```text
+.
+|-- fuxictr/                         # Local FuxiCTR-based framework code
+|-- model_zoo/                       # CTR model configs, sources, and experiment entry points
+|-- 1.prepare.sh                     # Download and prepare Avazu/Criteo datasets
+|-- 2.reproduce.sh                   # Train discriminative and generative variants
+|-- 3.analyze.sh                     # Extract embeddings and plot paper analyses
+|-- analyze.py                       # Inference-time embedding extraction
+|-- plot_paper_*.py                  # Visualization scripts for paper diagnostics
+|-- requirements.txt
+|-- docs/assets/                     # README figures cropped from the paper
+`-- README.md
 ```
 
-## Prepare dataset
+## 5. Installation
+
+```bash
+conda create -n GE4Rec python=3.10 -y
+conda activate GE4Rec
+pip install torch torchvision torchaudio
+pip install -r requirements.txt
+```
+
+The code is implemented on top of [FuxiCTR](https://github.com/reczoo/FuxiCTR). Use a CUDA-enabled environment for full reproduction.
+
+## 6. Data
+
+Download the Avazu and Criteo datasets used by the reproduction scripts:
 
 ```bash
 bash 1.prepare.sh
 ```
 
-## Reproduce experiments
+The script downloads the FuxiCTR-format archives from Hugging Face and extracts them into:
 
-The following script will reproduce results on DCN V2
+```text
+data/Avazu/avazu_x4_3bbbc4c9/
+data/Criteo/criteo_x1_7b681156/
+```
+
+After the first run, FuxiCTR may generate parquet files. For faster follow-up runs, update the relevant `dataset_config.yaml` entries to use `data_format: parquet`, set `rebuild_dataset: false`, and point `train_data`, `valid_data`, and `test_data` to the generated parquet files.
+
+## 7. Quick Start
+
+The default reproduction script trains DeepFM variants on Avazu:
+
 ```bash
 bash 2.reproduce.sh
+```
+
+Then extract embeddings and generate analysis plots:
+
+```bash
 bash 3.analyze.sh
 ```
 
+Check the GPU IDs inside the scripts before running. The default scripts use GPU `3` for Avazu and GPU `0` for Criteo analysis commands.
 
-## Advanced usage & Code explanations
+## 8. Reproducing Paper Results
 
-### Faster training with preprocessed data (Highly Recommended!!!)
+The paper compares discriminative (`DIS`) and generative (`GEN`) variants across multiple CTR backbones. To switch models, edit the `model_name` variable in:
 
-   After the first run, FuxiCTR generates the `parquet` format dataset (that can be found in `data/Avazu/avazu_x4_3bbbc4c9`). You should change the following entries of dataset config files for faster training. For example, in `model_zoo/FM/config/dataset_config.yaml`, and similarly for other models, make these changes:
-   ```yaml
-   avazu_x4_3bbbc4c9:
-      data_format: parquet # original: csv
-      ...
-      ...
-      rebuild_dataset: false # original: true
-      test_data: ../../data/Avazu/avazu_x4_3bbbc4c9/test.parquet # original: test.csv
-      train_data: ../../data/Avazu/avazu_x4_3bbbc4c9/train.parquet # original: train.csv
-      valid_data: ../../data/Avazu/avazu_x4_3bbbc4c9/valid.parquet # original: valid.csv
-   ```
-
-### Generate other embeddings for analysis
-
-After experiments, we can perform model inference based on the saved checkpoints (e.g., `model_zoo/DeepFM/Avazu/DeepFM_avazu_x4_001/avazu_x4_3bbbc4c9/`).
-
-1. We should register embeddings that need to be saved in a `init_record` function (please refer to `model_zoo/DCNv2/src/DCNv2.py`). This should follow a `record_XXX` format, where `XXX` is the name of embeddings that you want to save for future analysis. The following line will save the feature embeddings. Remarkably, embeddings required for analysis in the paper have already been registered.
-
-```python
-def init_record(self):
-   self.record_feature_emb = []
-   ...
+```bash
+2.reproduce.sh
+3.analyze.sh
 ```
 
-2. We should change the forward function to record the specified embedding, like:
-   
-```python
-def forward(self, inputs):
-   X = self.get_inputs(inputs)
-   feature_emb = self.embedding_layer(X, flatten_emb=True)
-   if self.analyzing:
-      self.record_feature_emb.append(
-         feature_emb.detach().clone().cpu()
-      )
-   ...
+Each model's experiment definitions live under `model_zoo/<ModelName>/config/`. For example, DCN V2 includes the generative implementation and embedding-recording hooks used by the analysis scripts.
+
+## 9. Analysis Hooks
+
+Embedding analysis relies on model-side recording hooks. Register embeddings in an `init_record` method with names like `record_feature_emb`, and append detached CPU tensors during `forward` when `self.analyzing` is enabled. See `model_zoo/DCNv2/src/DCNv2.py` for the existing pattern.
+
+## 10. Experimental Highlights
+
+![GE4Rec main results](docs/assets/ge4rec-main-results.png)
+
+Across Avazu and Criteo, the generative paradigm consistently improves AUC and Logloss for multiple CTR backbones, showing that the SFG formulation is not tied to one specific interaction architecture.
+
+![GE4Rec embedding spectrum](docs/assets/ge4rec-embedding-spectrum.png)
+
+The embedding spectrum analysis shows that SFG mitigates dimensional collapse by maintaining a healthier distribution of singular values.
+
+![GE4Rec redundancy correlation](docs/assets/ge4rec-redundancy-correlation.png)
+
+Correlation analysis shows that the generative formulation reduces redundancy between interacted embeddings, which supports the paper's explanation for the observed performance gains.
+
+## 11. Notes For Maintainers
+
+- Keep FuxiCTR-compatible configs and scripts aligned when adding a new model.
+- If a model is used for analysis, make sure the embedding-recording hooks are registered before running `3.analyze.sh`.
+- Keep README figures under `docs/assets/`; generated experiment outputs should remain in their experiment folders.
+
+<a id="citation"></a>
+
+## 12. Citation
+
+```bibtex
+@inproceedings{yin2025feature,
+  title = {From Feature Interaction to Feature Generation: A Generative Paradigm of CTR Prediction Models},
+  author = {Yin, Mingjia and Pan, Junwei and Wang, Hao and Wang, Ximei and Zhang, Shangyu and Jiang, Jie and Lian, Defu and Chen, Enhong},
+  booktitle = {Proceedings of the 42nd International Conference on Machine Learning},
+  series = {Proceedings of Machine Learning Research},
+  volume = {267},
+  year = {2025}
+}
 ```
+
+## 13. Contact
+
+For paper questions, contact Hao Wang at `wanghao3@ustc.edu.cn`. For repository issues, please open a GitHub issue in this repository.
