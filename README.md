@@ -1,6 +1,6 @@
 # From Feature Interaction to Feature Generation
 
-[![arXiv](https://img.shields.io/badge/arXiv-2512.14041-b31b1b.svg)](https://arxiv.org/abs/2512.14041)
+[![Project Page](https://img.shields.io/badge/Project-Page-2454d6.svg)](https://ustc-starteam.github.io/GE4Rec/)
 [![ICML 2025](https://img.shields.io/badge/ICML-2025-4b6cb7.svg)](https://icml.cc/)
 [![FuxiCTR](https://img.shields.io/badge/Based%20on-FuxiCTR-2d7dd2.svg)](https://github.com/reczoo/FuxiCTR)
 
