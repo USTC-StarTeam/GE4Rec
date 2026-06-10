@@ -109,9 +109,22 @@
     .paper-ref {
       color: #324057;
       font-size: 14px;
-      margin: 0 0 18px;
+      margin: 0 0 12px;
       padding-left: 14px;
       border-left: 3px solid var(--blue);
+      max-width: 790px;
+    }
+
+    .paper-links {
+      margin: 0 0 14px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .paper-summary {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 15px;
       max-width: 790px;
     }
 
@@ -296,7 +309,9 @@
           <div class="eyebrow">ICML 2025</div>
           <h1>From Feature Interaction to Feature Generation</h1>
           <p class="subtitle">A supervised feature generation paradigm that reformulates CTR prediction models from discriminative raw-ID interaction to generative representation learning.</p>
-          <p class="paper-ref">Mingjia Yin, Junwei Pan, Hao Wang, Ximei Wang, Shangyu Zhang, Jie Jiang, Defu Lian, and Enhong Chen. <strong>From Feature Interaction to Feature Generation: A Generative Paradigm of CTR Prediction Models.</strong> In <em>Proceedings of the 42nd International Conference on Machine Learning (ICML 2025)</em>, PMLR 267, 2025. Paper: <a href="https://arxiv.org/abs/2512.14041">arXiv:2512.14041</a>; <a href="https://openreview.net/forum?id=DatAXrGzlc">OpenReview</a>.</p>
+          <p class="paper-ref">Mingjia Yin, Junwei Pan, Hao Wang, Ximei Wang, Shangyu Zhang, Jie Jiang, Defu Lian, and Enhong Chen. <strong>From Feature Interaction to Feature Generation: A Generative Paradigm of CTR Prediction Models.</strong> In <em>Proceedings of the 42nd International Conference on Machine Learning (ICML 2025)</em>, PMLR 267, 2025.</p>
+          <p class="paper-links"><a href="https://arxiv.org/abs/2512.14041">Paper</a> / <a href="https://arxiv.org/pdf/2512.14041">PDF</a> / <a href="https://ustc-starteam.github.io/GE4Rec/">Project Page</a> / <a href="#citation">Citation</a></p>
+          <p class="paper-summary">GE4Rec introduces Supervised Feature Generation for CTR prediction. It shifts CTR models from discriminative feature interaction toward generative feature representation, reducing embedding collapse and information redundancy while preserving compatibility with common FuxiCTR-style backbones.</p>
           <div class="buttons">
             <a class="button primary" href="https://github.com/USTC-StarTeam/GE4Rec">Code</a>
             <a class="button" href="#method">Method</a>

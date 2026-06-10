@@ -10,7 +10,11 @@ This repository implements **Supervised Feature Generation (SFG)**, a generative
 
 ## 1. Paper
 
-Mingjia Yin, Junwei Pan, Hao Wang, Ximei Wang, Shangyu Zhang, Jie Jiang, Defu Lian, and Enhong Chen. **From Feature Interaction to Feature Generation: A Generative Paradigm of CTR Prediction Models.** Proceedings of the 42nd International Conference on Machine Learning (ICML), PMLR 267, 2025. [arXiv:2512.14041](https://arxiv.org/abs/2512.14041), [OpenReview](https://openreview.net/forum?id=DatAXrGzlc).
+Mingjia Yin, Junwei Pan, Hao Wang, Ximei Wang, Shangyu Zhang, Jie Jiang, Defu Lian, and Enhong Chen. **From Feature Interaction to Feature Generation: A Generative Paradigm of CTR Prediction Models.** In *Proceedings of the 42nd International Conference on Machine Learning (ICML 2025)*, PMLR 267, 2025.
+
+[Paper](https://arxiv.org/abs/2512.14041) / [PDF](https://arxiv.org/pdf/2512.14041) / [Project Page](https://ustc-starteam.github.io/GE4Rec/) / [Citation](#citation)
+
+GE4Rec introduces Supervised Feature Generation for CTR prediction. It shifts existing CTR models from discriminative feature interaction toward a generative feature representation paradigm, reducing embedding collapse and information redundancy while preserving compatibility with common FuxiCTR-style backbones.
 
 ## 2. Highlights
 
