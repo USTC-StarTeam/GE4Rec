@@ -165,11 +165,14 @@ data/Criteo/criteo_x1_7b681156/</code></pre>
 <p>Embedding analysis relies on model-side recording hooks. Register embeddings in an <code>init_record</code> method with names like <code>record_feature_emb</code>, and append detached CPU tensors during <code>forward</code> when <code>self.analyzing</code> is enabled. See <code>model_zoo/DCNv2/src/DCNv2.py</code> for the existing pattern.</p>
 <h2 id="10-experimental-highlights">10. Experimental Highlights</h2>
 <p><img src="assets/ge4rec-main-results.png" alt="GE4Rec main results"></p>
-<p>Across Avazu and Criteo, the generative paradigm consistently improves AUC and Logloss for multiple CTR backbones, showing that the SFG formulation is not tied to one specific interaction architecture.</p>
+<p>Across Avazu and Criteo, GE4Rec reports an average <strong>+0.272% AUC lift</strong> and <strong>-0.435% Logloss reduction</strong> across multiple CTR backbones. For explicit feature-interaction models, the average gain is <strong>+0.428% AUC</strong> and <strong>-0.689% Logloss</strong>.</p>
+<p><strong>Conclusion:</strong> the SFG formulation is not tied to one specific interaction architecture, and the reported AUC changes are meaningful for large-scale recommendation systems.</p>
 <p><img src="assets/ge4rec-embedding-spectrum.png" alt="GE4Rec embedding spectrum"></p>
-<p>The embedding spectrum analysis shows that SFG mitigates dimensional collapse by maintaining a healthier distribution of singular values.</p>
+<p>The embedding spectrum analysis shows that SFG mitigates dimensional collapse by maintaining a healthier distribution of singular values. The paper further reports that generative CrossNet can outperform discriminative DCN V2 by <strong>+0.106% AUC</strong> and <strong>-0.089% Logloss</strong>, even though DCN V2 has an additional DNN component.</p>
+<p><strong>Conclusion:</strong> GE4Rec improves both prediction quality and representation geometry.</p>
 <p><img src="assets/ge4rec-redundancy-correlation.png" alt="GE4Rec redundancy correlation"></p>
-<p>Correlation analysis shows that the generative formulation reduces redundancy between interacted embeddings, which supports the paper's explanation for the observed performance gains.</p>
+<p>Correlation analysis shows that the generative formulation reduces redundancy between interacted embeddings, which supports the paper's explanation for the observed performance gains. In online A/B testing, the production deployment reports <strong>+2.68% GMV</strong> and <strong>+2.46% CTR</strong>.</p>
+<p><strong>Conclusion:</strong> the paper connects offline gains, embedding-space analysis, and online business metrics into the same explanation.</p>
 <h2 id="11-notes-for-maintainers">11. Notes For Maintainers</h2>
 <ul>
 <li>Keep FuxiCTR-compatible configs and scripts aligned when adding a new model.</li>

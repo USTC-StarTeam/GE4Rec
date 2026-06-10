@@ -108,15 +108,21 @@ Embedding analysis relies on model-side recording hooks. Register embeddings in 
 
 ![GE4Rec main results](docs/assets/ge4rec-main-results.png)
 
-Across Avazu and Criteo, the generative paradigm consistently improves AUC and Logloss for multiple CTR backbones, showing that the SFG formulation is not tied to one specific interaction architecture.
+Across Avazu and Criteo, GE4Rec reports an average **+0.272% AUC lift** and **-0.435% Logloss reduction** across multiple CTR backbones. For explicit feature-interaction models, the average gain is **+0.428% AUC** and **-0.689% Logloss**.
+
+**Conclusion:** the SFG formulation is not tied to one specific interaction architecture, and the reported AUC changes are meaningful for large-scale recommendation systems.
 
 ![GE4Rec embedding spectrum](docs/assets/ge4rec-embedding-spectrum.png)
 
-The embedding spectrum analysis shows that SFG mitigates dimensional collapse by maintaining a healthier distribution of singular values.
+The embedding spectrum analysis shows that SFG mitigates dimensional collapse by maintaining a healthier distribution of singular values. The paper further reports that generative CrossNet can outperform discriminative DCN V2 by **+0.106% AUC** and **-0.089% Logloss**, even though DCN V2 has an additional DNN component.
+
+**Conclusion:** GE4Rec improves both prediction quality and representation geometry.
 
 ![GE4Rec redundancy correlation](docs/assets/ge4rec-redundancy-correlation.png)
 
-Correlation analysis shows that the generative formulation reduces redundancy between interacted embeddings, which supports the paper's explanation for the observed performance gains.
+Correlation analysis shows that the generative formulation reduces redundancy between interacted embeddings, which supports the paper's explanation for the observed performance gains. In online A/B testing, the production deployment reports **+2.68% GMV** and **+2.46% CTR**.
+
+**Conclusion:** the paper connects offline gains, embedding-space analysis, and online business metrics into the same explanation.
 
 ## 11. Notes For Maintainers
 
