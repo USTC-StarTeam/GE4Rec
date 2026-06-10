@@ -3,421 +3,182 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>GE4Rec: From Feature Interaction to Feature Generation</title>
-  <meta name="description" content="Project page for GE4Rec, a supervised feature generation paradigm for CTR prediction models.">
+  <title>From Feature Interaction to Feature Generation</title>
   <style>
     :root {
       --ink: #172033;
-      --muted: #5d6d82;
-      --line: #d7dfeb;
+      --muted: #53657a;
+      --line: #d8e0ea;
       --paper: #ffffff;
-      --soft: #f4f7fb;
+      --soft: #f3f6fa;
       --blue: #2454d6;
       --green: #087443;
-      --orange: #b35300;
+      --gold: #9f6700;
     }
-
     * { box-sizing: border-box; }
-
+    html, body { margin: 0; overflow-x: hidden; }
     body {
-      margin: 0;
       color: var(--ink);
-      background: #eef2f7;
+      background: linear-gradient(180deg, #ffffff 0, #f6f8fb 360px, #eef2f7 100%);
       font-family: Inter, "Segoe UI", Arial, sans-serif;
-      line-height: 1.55;
-      overflow-x: hidden;
+      line-height: 1.62;
     }
-
-    a {
-      color: var(--blue);
-      text-decoration: none;
-      font-weight: 700;
-    }
-
+    a { color: var(--blue); font-weight: 700; text-decoration: none; }
     a:hover { text-decoration: underline; }
-
-    .wrap {
-      width: min(1120px, calc(100vw - 36px));
-      margin: 0 auto;
-    }
-
-    header {
-      background: var(--paper);
-      border-bottom: 1px solid var(--line);
-    }
-
-    nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      min-height: 58px;
-      font-size: 14px;
-    }
-
-    nav strong { font-size: 15px; }
-
-    nav div {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .hero {
-      padding: 52px 0 38px;
-      background: var(--paper);
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
-      gap: 34px;
-      align-items: center;
-    }
-
-    .hero-grid > *,
-    .steps > *,
-    .results > *,
-    .notes > *,
-    .figure-grid > * { min-width: 0; }
-
-    .eyebrow {
-      color: var(--blue);
-      font-size: 13px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 10px;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(34px, 5vw, 56px);
-      line-height: 1.04;
-      letter-spacing: 0;
-      overflow-wrap: break-word;
-    }
-
-    .subtitle {
-      margin: 18px 0 16px;
-      color: var(--muted);
-      font-size: 18px;
-      max-width: 760px;
-    }
-
-    .paper-ref {
-      color: #324057;
-      font-size: 14px;
-      margin: 0 0 12px;
-      padding-left: 14px;
-      border-left: 3px solid var(--blue);
-      max-width: 790px;
-    }
-
-    .paper-links {
-      margin: 0 0 14px;
-      font-size: 14px;
-      font-weight: 800;
-    }
-
-    .paper-summary {
-      margin: 0 0 18px;
-      color: var(--muted);
-      font-size: 15px;
-      max-width: 790px;
-    }
-
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 9px;
-    }
-
+    .wrap { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 18px; }
+    .site-header { background: #fff; border-bottom: 1px solid var(--line); }
+    nav { min-height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 18px; font-size: 14px; }
+    nav .brand { color: var(--ink); font-weight: 900; }
+    nav .nav-links { display: flex; flex-wrap: wrap; gap: 14px; }
+    .hero { padding: 48px 0 34px; }
+    .eyebrow { margin: 0 0 10px; color: var(--green); font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; }
+    h1 { margin: 0; max-width: 980px; font-size: clamp(32px, 5vw, 56px); line-height: 1.06; letter-spacing: 0; overflow-wrap: anywhere; word-break: break-word; }
+    .subtitle { max-width: 860px; margin: 18px 0 0; color: var(--muted); font-size: 18px; }
+    .quick-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
     .button {
-      display: inline-flex;
-      align-items: center;
-      min-height: 36px;
-      border: 1px solid #b8c4d9;
-      background: #fff;
-      color: #24344f;
-      border-radius: 6px;
-      padding: 0 13px;
-      font-size: 13px;
-      font-weight: 800;
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 38px; border: 1px solid #b9c5d8; border-radius: 6px;
+      padding: 0 13px; background: var(--paper); color: #263650; font-size: 14px;
     }
-
-    .button.primary {
-      background: var(--blue);
-      border-color: var(--blue);
-      color: #fff;
+    main.wrap { padding: 34px 18px 64px; }
+    .toc {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      padding: 14px; margin: 0 0 26px; border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,.78);
     }
-
-    .figure {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #fff;
-      padding: 12px;
-      box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
-      max-width: 100%;
-      overflow: hidden;
-    }
-
-    .figure img {
-      display: block;
-      width: 100%;
-      max-width: 100%;
-      height: auto;
-      border-radius: 5px;
-    }
-
-    .caption {
-      margin: 10px 4px 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    section { padding: 48px 0; }
-
-    h2 {
-      margin: 0 0 12px;
-      font-size: 30px;
-      line-height: 1.2;
-      letter-spacing: 0;
-      overflow-wrap: break-word;
-    }
-
-    .section-lead {
-      margin: 0 0 22px;
-      color: var(--muted);
-      max-width: 840px;
-      font-size: 16px;
-    }
-
-    .steps,
-    .results,
-    .notes,
-    .figure-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .figure-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      margin-top: 18px;
-    }
-
-    .step,
-    .result,
-    .note {
+    .toc a { font-size: 13px; padding: 6px 8px; border-radius: 6px; background: #eef3fb; color: #26405f; }
+    .content {
       background: var(--paper);
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 18px;
+      padding: 32px;
+      box-shadow: 0 18px 44px rgba(15, 23, 42, .06);
     }
-
-    .step strong,
-    .result strong,
-    .note strong {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 16px;
-    }
-
-    .step p,
-    .result p,
-    .note p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .metric {
-      color: var(--green);
-      font-size: 28px;
-      font-weight: 900;
-      line-height: 1;
-      margin-bottom: 10px;
-    }
-
-    pre {
-      overflow: auto;
-      background: #111827;
-      color: #e5e7eb;
-      border-radius: 8px;
-      padding: 18px;
-      font-size: 13px;
-      line-height: 1.5;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    code { font-family: "Cascadia Mono", Consolas, monospace; }
-
-    footer {
-      padding: 26px 0 42px;
-      color: var(--muted);
-      border-top: 1px solid var(--line);
-      background: var(--paper);
-      font-size: 14px;
-    }
-
-    @media (max-width: 900px) {
-      .hero-grid,
-      .steps,
-      .results,
-      .notes,
-      .figure-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero { padding-top: 34px; }
-
-      nav {
-        align-items: flex-start;
-        flex-direction: column;
-        padding: 14px 0;
-      }
-    }
-
-    @media (max-width: 560px) {
-      .wrap { width: min(1120px, calc(100vw - 22px)); }
-      h1 { font-size: 34px; }
-      h2 { font-size: 26px; }
-      .paper-ref { font-size: 13px; }
+    h2 { margin: 42px 0 14px; padding-top: 4px; border-top: 1px solid var(--line); font-size: 30px; line-height: 1.22; letter-spacing: 0; }
+    h2:first-child { margin-top: 0; border-top: 0; }
+    h3 { margin: 28px 0 10px; font-size: 22px; line-height: 1.25; letter-spacing: 0; }
+    p, li, td, th, .nav-links a, .toc a, .button { overflow-wrap: anywhere; word-break: break-word; }
+    p { margin: 0 0 16px; }
+    ul, ol { padding-left: 24px; }
+    li { margin: 6px 0; }
+    img { max-width: 100%; height: auto; border-radius: 6px; }
+    p > img:only-child { display: block; margin: 18px auto; border: 1px solid var(--line); box-shadow: 0 12px 30px rgba(15, 23, 42, .08); }
+    pre { max-width: 100%; overflow-x: auto; white-space: pre; margin: 16px 0; padding: 16px; border-radius: 8px; background: #111827; color: #e5e7eb; line-height: 1.5; }
+    code { font-family: "Cascadia Mono", Consolas, monospace; font-size: .92em; }
+    :not(pre) > code { padding: .12em .35em; border-radius: 4px; background: #eef2f7; color: #17304f; }
+    table { display: block; width: 100%; max-width: 100%; overflow-x: auto; border-collapse: collapse; margin: 16px 0; }
+    th, td { padding: 9px 10px; border: 1px solid var(--line); vertical-align: top; }
+    th { background: #f4f7fb; text-align: left; }
+    blockquote { margin: 18px 0; padding: 10px 16px; border-left: 4px solid var(--blue); background: #f4f7fb; color: #334155; }
+    footer { padding: 28px 0 44px; color: var(--muted); font-size: 14px; }
+    @media (max-width: 760px) {
+      .wrap { padding: 0 12px; }
+      nav { align-items: flex-start; flex-direction: column; padding: 14px 0; }
+      nav .nav-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; width: 100%; }
+      nav .nav-links a { min-width: 0; padding: 6px 8px; border-radius: 6px; background: #eef3fb; font-size: 13px; line-height: 1.25; }
+      .hero { padding: 34px 0 26px; }
+      h1 { max-width: 100%; font-size: 30px; }
+      .subtitle { font-size: 16px; }
+      .quick-links { display: grid; grid-template-columns: minmax(0, 1fr); }
+      .button { min-width: 0; width: 100%; padding: 7px 8px; }
+      .content { padding: 22px 16px; }
+      main.wrap { padding: 28px 12px 56px; }
+      h2 { font-size: 25px; }
+      h3 { font-size: 20px; }
+      pre { white-space: pre-wrap; word-break: break-word; }
     }
   </style>
 </head>
 <body>
-  <header>
+  <header class="site-header">
     <nav class="wrap">
-      <strong>GE4Rec</strong>
-      <div>
-        <a href="#method">1 Method</a>
-        <a href="#code">2 Code</a>
-        <a href="#results">3 Results</a>
-        <a href="#citation">4 Citation</a>
-      </div>
+      <a class="brand" href="https://github.com/USTC-StarTeam/GE4Rec">USTC-StarTeam/GE4Rec</a>
+      <div class="nav-links"><a href="#1-paper">1. Paper</a><a href="#2-highlights">2. Highlights</a><a href="#3-method-at-a-glance">3. Method At A Glance</a><a href="#4-repository-structure">4. Repository Structure</a><a href="#5-installation">5. Installation</a><a href="#6-data">6. Data</a><a href="#7-quick-start">7. Quick Start</a><a href="#8-reproducing-paper-results">8. Reproducing Paper Results</a><a href="#9-analysis-hooks">9. Analysis Hooks</a><a href="#10-experimental-highlights">10. Experimental Highlights</a><a href="#11-notes-for-maintainers">11. Notes For Maintainers</a><a href="#12-citation">12. Citation</a><a href="#13-contact">13. Contact</a></div>
     </nav>
-  </header>
-
-  <main>
     <section class="hero">
-      <div class="wrap hero-grid">
-        <div>
-          <div class="eyebrow">ICML 2025</div>
-          <h1>From Feature Interaction to Feature Generation</h1>
-          <p class="subtitle">A supervised feature generation paradigm that reformulates CTR prediction models from discriminative raw-ID interaction to generative representation learning.</p>
-          <p class="paper-ref">Mingjia Yin, Junwei Pan, Hao Wang, Ximei Wang, Shangyu Zhang, Jie Jiang, Defu Lian, and Enhong Chen. <strong>From Feature Interaction to Feature Generation: A Generative Paradigm of CTR Prediction Models.</strong> In <em>Proceedings of the 42nd International Conference on Machine Learning (ICML 2025)</em>, PMLR 267, 2025.</p>
-          <p class="paper-links"><a href="https://arxiv.org/abs/2512.14041">Paper</a> / <a href="https://arxiv.org/pdf/2512.14041">PDF</a> / <a href="https://ustc-starteam.github.io/GE4Rec/">Project Page</a> / <a href="#citation">Citation</a></p>
-          <p class="paper-summary">GE4Rec introduces Supervised Feature Generation for CTR prediction. It shifts CTR models from discriminative feature interaction toward generative feature representation, reducing embedding collapse and information redundancy while preserving compatibility with common FuxiCTR-style backbones.</p>
-          <div class="buttons">
-            <a class="button primary" href="https://github.com/USTC-StarTeam/GE4Rec">Code</a>
-            <a class="button" href="#method">Method</a>
-            <a class="button" href="#results">Results</a>
-            <a class="button" href="#citation">BibTeX</a>
-          </div>
-        </div>
-        <figure class="figure">
-          <img src="assets/ge4rec-method-overview.png" alt="GE4Rec supervised feature generation method overview">
-          <figcaption class="caption">SFG uses an encoder-decoder pathway to generate feature representations before downstream CTR interaction.</figcaption>
-        </figure>
+      <div class="wrap">
+        <p class="eyebrow">Academic Project Page</p>
+        <h1>From Feature Interaction to Feature Generation</h1>
+        <p class="subtitle">GE4Rec introduces Supervised Feature Generation for CTR prediction. It shifts existing CTR models from discriminative feature interaction toward a generative feature representation paradigm, reducing embedding collapse and information redundancy while preserving compatibility with common FuxiCTR-style backbones.</p>
+        <div class="quick-links"><a class="button" href="https://arxiv.org/abs/2512.14041">Paper</a><a class="button" href="https://arxiv.org/pdf/2512.14041">PDF</a><a class="button" href="https://ustc-starteam.github.io/GE4Rec/">Project Page</a><a class="button" href="#citation">Citation</a><a class="button" href="https://github.com/USTC-StarTeam/GE4Rec">GitHub Repo</a></div>
       </div>
     </section>
-
-    <section id="method">
-      <div class="wrap">
-        <h2>1. Method: Supervised Feature Generation</h2>
-        <p class="section-lead">GE4Rec adds a generative representation pathway to existing CTR backbones, using supervised click labels to train feature generation rather than relying only on direct interaction among raw ID embeddings.</p>
-        <div class="steps">
-          <article class="step">
-            <strong>1. Encode Features</strong>
-            <p>Build hidden feature embeddings from raw categorical fields with a lightweight encoder.</p>
-          </article>
-          <article class="step">
-            <strong>2. Generate Representations</strong>
-            <p>Decode generated feature embeddings that can be consumed by existing interaction functions.</p>
-          </article>
-          <article class="step">
-            <strong>3. Optimize With Labels</strong>
-            <p>Train under supervised CTR labels to reduce collapse and redundancy while improving prediction.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="code">
-      <div class="wrap">
-        <h2>2. Code</h2>
-        <p class="section-lead">The repository is implemented on top of FuxiCTR and provides scripts for data preparation, reproduction, and paper-style analysis.</p>
-        <div class="notes">
-          <article class="note">
-            <strong>Install dependencies</strong>
-            <pre><code>conda create -n GE4Rec python=3.10 -y
+  </header>
+  <main class="wrap">
+    <div class="toc"><a href="#1-paper">1. Paper</a><a href="#2-highlights">2. Highlights</a><a href="#3-method-at-a-glance">3. Method At A Glance</a><a href="#4-repository-structure">4. Repository Structure</a><a href="#5-installation">5. Installation</a><a href="#6-data">6. Data</a><a href="#7-quick-start">7. Quick Start</a><a href="#8-reproducing-paper-results">8. Reproducing Paper Results</a><a href="#9-analysis-hooks">9. Analysis Hooks</a><a href="#10-experimental-highlights">10. Experimental Highlights</a><a href="#11-notes-for-maintainers">11. Notes For Maintainers</a><a href="#12-citation">12. Citation</a><a href="#13-contact">13. Contact</a></div>
+    <article class="content">
+<p><a href="https://ustc-starteam.github.io/GE4Rec/"><img src="https://img.shields.io/badge/Project-Page-2454d6.svg" alt="Project Page"></a>
+<a href="https://icml.cc/"><img src="https://img.shields.io/badge/ICML-2025-4b6cb7.svg" alt="ICML 2025"></a>
+<a href="https://github.com/reczoo/FuxiCTR"><img src="https://img.shields.io/badge/Based%20on-FuxiCTR-2d7dd2.svg" alt="FuxiCTR"></a></p>
+<p>Official code for <strong>"From Feature Interaction to Feature Generation: A Generative Paradigm of CTR Prediction Models"</strong>.</p>
+<p>This repository implements <strong>Supervised Feature Generation (SFG)</strong>, a generative reformulation for click-through rate prediction models. Instead of relying only on discriminative interactions among raw ID embeddings, SFG learns an encoder-decoder process that generates feature representations under supervised CTR labels and can be integrated into existing CTR backbones.</p>
+<h2 id="1-paper">1. Paper</h2>
+<p>Mingjia Yin, Junwei Pan, Hao Wang, Ximei Wang, Shangyu Zhang, Jie Jiang, Defu Lian, and Enhong Chen. <strong>From Feature Interaction to Feature Generation: A Generative Paradigm of CTR Prediction Models.</strong> In <em>Proceedings of the 42nd International Conference on Machine Learning (ICML 2025)</em>, PMLR 267, 2025.</p>
+<p><a href="https://arxiv.org/abs/2512.14041">Paper</a> / <a href="https://arxiv.org/pdf/2512.14041">PDF</a> / <a href="https://ustc-starteam.github.io/GE4Rec/">Project Page</a> / <a href="#citation">Citation</a></p>
+<p>GE4Rec introduces Supervised Feature Generation for CTR prediction. It shifts existing CTR models from discriminative feature interaction toward a generative feature representation paradigm, reducing embedding collapse and information redundancy while preserving compatibility with common FuxiCTR-style backbones.</p>
+<h2 id="2-highlights">2. Highlights</h2>
+<ul>
+<li>Reframes CTR prediction from <strong>feature interaction</strong> to <strong>feature generation</strong>.</li>
+<li>Adds a supervised encoder-decoder path that mitigates embedding dimensional collapse and information redundancy.</li>
+<li>Generalizes across common FuxiCTR-style backbones, including FM, FmFM, CrossNet V2, DeepFM, xDeepFM, IPNN, and DCN V2.</li>
+<li>Includes scripts for dataset preparation, model reproduction, embedding extraction, and paper-style analysis plots.</li>
+</ul>
+<h2 id="3-method-at-a-glance">3. Method At A Glance</h2>
+<p><img src="assets/ge4rec-method-overview.png" alt="GE4Rec method overview"></p>
+<p>SFG constructs hidden embeddings with an encoder and uses a decoder to regenerate feature embeddings. The generated representations are then consumed by the downstream CTR interaction module and optimized with supervised click labels, making the generative paradigm compatible with existing CTR models.</p>
+<h2 id="4-repository-structure">4. Repository Structure</h2>
+<pre><code class="language-text">.
+|-- fuxictr/                         # Local FuxiCTR-based framework code
+|-- model_zoo/                       # CTR model configs, sources, and experiment entry points
+|-- 1.prepare.sh                     # Download and prepare Avazu/Criteo datasets
+|-- 2.reproduce.sh                   # Train discriminative and generative variants
+|-- 3.analyze.sh                     # Extract embeddings and plot paper analyses
+|-- analyze.py                       # Inference-time embedding extraction
+|-- plot_paper_*.py                  # Visualization scripts for paper diagnostics
+|-- requirements.txt
+|-- docs/assets/                     # README figures cropped from the paper
+`-- README.md</code></pre>
+<h2 id="5-installation">5. Installation</h2>
+<pre><code class="language-bash">conda create -n GE4Rec python=3.10 -y
 conda activate GE4Rec
 pip install torch torchvision torchaudio
 pip install -r requirements.txt</code></pre>
-          </article>
-          <article class="note">
-            <strong>Prepare datasets</strong>
-            <pre><code>bash 1.prepare.sh</code></pre>
-          </article>
-          <article class="note">
-            <strong>Reproduce and analyze</strong>
-            <pre><code>bash 2.reproduce.sh
-bash 3.analyze.sh</code></pre>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="results">
-      <div class="wrap">
-        <h2>3. Experimental Highlights</h2>
-        <p class="section-lead">The generative paradigm improves multiple CTR backbones while analysis plots explain why it helps: healthier embedding spectra and lower redundancy.</p>
-        <div class="results">
-          <article class="result">
-            <div class="metric">AUC</div>
-            <strong>Main performance gains</strong>
-            <p>Generative variants improve AUC and Logloss across Avazu and Criteo for multiple base models.</p>
-          </article>
-          <article class="result">
-            <div class="metric">Spectrum</div>
-            <strong>Less collapse</strong>
-            <p>Generated embeddings preserve a healthier singular-value spectrum than discriminative embeddings.</p>
-          </article>
-          <article class="result">
-            <div class="metric">Corr.</div>
-            <strong>Less redundancy</strong>
-            <p>Correlation matrices show reduced redundant information between interacted embeddings.</p>
-          </article>
-        </div>
-        <div class="figure-grid">
-          <figure class="figure">
-            <img src="assets/ge4rec-main-results.png" alt="GE4Rec main recommendation performance results">
-            <figcaption class="caption">Generative reformulation consistently improves CTR prediction metrics.</figcaption>
-          </figure>
-          <figure class="figure">
-            <img src="assets/ge4rec-embedding-spectrum.png" alt="Embedding spectrum comparison between discriminative and generative paradigms">
-            <figcaption class="caption">The spectrum analysis shows mitigation of dimensional collapse.</figcaption>
-          </figure>
-          <figure class="figure">
-            <img src="assets/ge4rec-redundancy-correlation.png" alt="Correlation analysis showing reduced embedding redundancy">
-            <figcaption class="caption">The generative paradigm reduces redundancy between interacted embeddings.</figcaption>
-          </figure>
-          <article class="note">
-            <strong>FuxiCTR compatibility</strong>
-            <p>GE4Rec keeps the model zoo organization familiar to FuxiCTR users, making it easier to add new CTR backbones.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="citation">
-      <div class="wrap">
-        <h2>4. Citation</h2>
-        <pre><code>@inproceedings{yin2025feature,
+<p>The code is implemented on top of <a href="https://github.com/reczoo/FuxiCTR">FuxiCTR</a>. Use a CUDA-enabled environment for full reproduction.</p>
+<h2 id="6-data">6. Data</h2>
+<p>Download the Avazu and Criteo datasets used by the reproduction scripts:</p>
+<pre><code class="language-bash">bash 1.prepare.sh</code></pre>
+<p>The script downloads the FuxiCTR-format archives from Hugging Face and extracts them into:</p>
+<pre><code class="language-text">data/Avazu/avazu_x4_3bbbc4c9/
+data/Criteo/criteo_x1_7b681156/</code></pre>
+<p>After the first run, FuxiCTR may generate parquet files. For faster follow-up runs, update the relevant <code>dataset_config.yaml</code> entries to use <code>data_format: parquet</code>, set <code>rebuild_dataset: false</code>, and point <code>train_data</code>, <code>valid_data</code>, and <code>test_data</code> to the generated parquet files.</p>
+<h2 id="7-quick-start">7. Quick Start</h2>
+<p>The default reproduction script trains DeepFM variants on Avazu:</p>
+<pre><code class="language-bash">bash 2.reproduce.sh</code></pre>
+<p>Then extract embeddings and generate analysis plots:</p>
+<pre><code class="language-bash">bash 3.analyze.sh</code></pre>
+<p>Check the GPU IDs inside the scripts before running. The default scripts use GPU <code>3</code> for Avazu and GPU <code>0</code> for Criteo analysis commands.</p>
+<h2 id="8-reproducing-paper-results">8. Reproducing Paper Results</h2>
+<p>The paper compares discriminative (<code>DIS</code>) and generative (<code>GEN</code>) variants across multiple CTR backbones. To switch models, edit the <code>model_name</code> variable in:</p>
+<pre><code class="language-bash">2.reproduce.sh
+3.analyze.sh</code></pre>
+<p>Each model's experiment definitions live under <code>model_zoo/&lt;ModelName&gt;/config/</code>. For example, DCN V2 includes the generative implementation and embedding-recording hooks used by the analysis scripts.</p>
+<h2 id="9-analysis-hooks">9. Analysis Hooks</h2>
+<p>Embedding analysis relies on model-side recording hooks. Register embeddings in an <code>init_record</code> method with names like <code>record_feature_emb</code>, and append detached CPU tensors during <code>forward</code> when <code>self.analyzing</code> is enabled. See <code>model_zoo/DCNv2/src/DCNv2.py</code> for the existing pattern.</p>
+<h2 id="10-experimental-highlights">10. Experimental Highlights</h2>
+<p><img src="assets/ge4rec-main-results.png" alt="GE4Rec main results"></p>
+<p>Across Avazu and Criteo, the generative paradigm consistently improves AUC and Logloss for multiple CTR backbones, showing that the SFG formulation is not tied to one specific interaction architecture.</p>
+<p><img src="assets/ge4rec-embedding-spectrum.png" alt="GE4Rec embedding spectrum"></p>
+<p>The embedding spectrum analysis shows that SFG mitigates dimensional collapse by maintaining a healthier distribution of singular values.</p>
+<p><img src="assets/ge4rec-redundancy-correlation.png" alt="GE4Rec redundancy correlation"></p>
+<p>Correlation analysis shows that the generative formulation reduces redundancy between interacted embeddings, which supports the paper's explanation for the observed performance gains.</p>
+<h2 id="11-notes-for-maintainers">11. Notes For Maintainers</h2>
+<ul>
+<li>Keep FuxiCTR-compatible configs and scripts aligned when adding a new model.</li>
+<li>If a model is used for analysis, make sure the embedding-recording hooks are registered before running <code>3.analyze.sh</code>.</li>
+<li>Keep README figures under <code>docs/assets/</code>; generated experiment outputs should remain in their experiment folders.</li>
+</ul>
+<p><a id="citation"></a></p>
+<h2 id="12-citation">12. Citation</h2>
+<pre><code class="language-bibtex">@inproceedings{yin2025feature,
   title = {From Feature Interaction to Feature Generation: A Generative Paradigm of CTR Prediction Models},
   author = {Yin, Mingjia and Pan, Junwei and Wang, Hao and Wang, Ximei and Zhang, Shangyu and Jiang, Jie and Lian, Defu and Chen, Enhong},
   booktitle = {Proceedings of the 42nd International Conference on Machine Learning},
@@ -425,12 +186,18 @@ bash 3.analyze.sh</code></pre>
   volume = {267},
   year = {2025}
 }</code></pre>
-      </div>
-    </section>
-  </main>
+<h2 id="13-contact">13. Contact</h2>
+<p>For paper questions, please contact:</p>
+<ul>
+<li>First author: Mingjia Yin (<code>mingjia-yin@mail.ustc.edu.cn</code>)</li>
+<li>Corresponding author: Hao Wang (<code>wanghao3@ustc.edu.cn</code>)</li>
+</ul>
+<p>For repository issues, please open a GitHub issue in this repository.</p>
 
+    </article>
+  </main>
   <footer>
-    <div class="wrap">University of Science and Technology of China and Tencent Inc. Code: <a href="https://github.com/USTC-StarTeam/GE4Rec">USTC-StarTeam/GE4Rec</a>. Contact: Mingjia Yin (<a href="mailto:mingjia-yin@mail.ustc.edu.cn">mingjia-yin@mail.ustc.edu.cn</a>) and Hao Wang (<a href="mailto:wanghao3@ustc.edu.cn">wanghao3@ustc.edu.cn</a>).</div>
+    <div class="wrap">This project page mirrors the public-facing README content for quick paper, code, result, citation, and contact access.</div>
   </footer>
 </body>
 </html>
